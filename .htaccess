@@ -1,0 +1,22 @@
+# PayRoll Protect on Hostinger (LiteSpeed, Apache rules). The website lives in site/, so every
+# request is served from there: / is site/index.html, /book.html is site/book.html. Anything
+# outside site/ (docs/, source/, lab/, tools/, .git/) finds nothing and gets the 404 page.
+Options -Indexes
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # The host's own SSL and domain checks.
+  RewriteRule ^\.well-known/ - [L]
+
+  # Already inside site/ (including after the rule below has run): serve as is.
+  RewriteRule ^site/ - [L]
+
+  # Everything else maps into site/.
+  RewriteRule ^(.*)$ site/$1 [L]
+</IfModule>
+
+# The site's own page for missing (and forbidden) addresses, with the right status.
+ErrorDocument 404 /site/404.html
+ErrorDocument 403 /site/404.html
