@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en-GB" class="js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>3D lab | PayRoll Protect</title>
+  <link rel="preload" href="/site/assets/fonts/mona-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/site/assets/fonts/geist-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/site/css/base.css">
+  <link rel="stylesheet" href="/site/css/sections.css">
+  <style>
+    /* ---------- Lab chrome ---------- */
+    :root { --bar: 50px; }
+    body { background: #E6E8E8; }
+    .lbar { position: sticky; top: 0; z-index: 200; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding: 9px 20px; background: rgba(22, 25, 27, 0.95); color: #fff; font: 500 13px/1.2 system-ui, sans-serif; }
+    .lbar b { font-weight: 600; }
+    .seg { display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 3px; border-radius: 8px; background: rgba(255, 255, 255, 0.08); }
+    .seg a { padding: 7px 11px; border-radius: 6px; color: rgba(255, 255, 255, 0.75); text-decoration: none; }
+    .seg a[aria-current="true"] { background: #fff; color: #1F2326; }
+    .lbar .note { margin-left: auto; opacity: 0.6; }
+    .spec { padding-top: 56px; }
+    .spec__head { display: grid; gap: 8px; max-width: 78ch; margin-bottom: 20px; }
+    .spec__name { margin: 0; font: 600 13px/1 system-ui, sans-serif; letter-spacing: 0.04em; color: #1F2326; }
+    .spec__name span { margin-left: 8px; font-weight: 500; color: #636A70; }
+    .spec__why { margin: 0; font: 400 14px/1.55 system-ui, sans-serif; color: #4F565C; }
+    .spec__cost { margin: 0; font: 500 12px/1.5 var(--mono); color: #636A70; }
+    .spec__ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 4px; font: 500 12px/1 system-ui, sans-serif; color: #4F565C; }
+    .spec__ctl .seg { background: rgba(31, 35, 38, 0.08); }
+    .spec__ctl .seg button { padding: 6px 10px; border: 0; border-radius: 6px; background: transparent; color: #4F565C; font: inherit; cursor: pointer; }
+    .spec__ctl .seg button[aria-pressed="true"] { background: #1F2326; color: #fff; }
+    .scrolly { position: relative; height: 340vh; }
+    .sticky { position: sticky; top: var(--bar); height: calc(100vh - var(--bar)); height: calc(100svh - var(--bar)); overflow: hidden; }
+    .stage { position: absolute; inset: 10px; overflow: hidden; border-radius: 28px; background: var(--gun); color: var(--on-dark); }
+    .stage::before { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px); background-size: 56px 56px; background-position: center; -webkit-mask-image: radial-gradient(70% 70% at 60% 50%, #000 0%, transparent 75%); mask-image: radial-gradient(70% 70% at 60% 50%, #000 0%, transparent 75%); }
+    .stage__grid { position: relative; z-index: 1; display: grid; align-content: center; gap: 28px; height: 100%; }
+    @media (min-width: 1024px) { .stage__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; gap: 56px; } }
+    .readout { position: absolute; right: 22px; bottom: 18px; z-index: 3; font: 500 11px/1 var(--mono); letter-spacing: 0.07em; text-transform: uppercase; color: rgba(242, 244, 244, 0.42); }
+    @media (max-width: 1023px) { .stage .match__lead, .stage .lead { display: none; } .stage .match__title, .stage h2 { margin-bottom: 0.3em; font-size: clamp(1.6rem, 1.1rem + 2.4vw, 2.4rem); } }
+
+    /* ---------- 1. Invoice in depth ---------- */
+    /* The sheet lies back in perspective; rows that are held lift toward the viewer and cast a
+       shadow on the sheet; verified rows stay flat. Transform and opacity only. */
+    .ink { position: relative; perspective: 1500px; perspective-origin: 50% 10%; }
+    .ink__sheet { position: relative; transform-style: preserve-3d; transform-origin: 50% 65%; padding: 0 0 8px; border-radius: 20px; background: linear-gradient(180deg, #2B3034, #24282B); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.09); will-change: transform; }
+    .ink__floor { position: absolute; inset: 6% 4% -4%; z-index: -1; border-radius: 28px; background: rgba(0, 0, 0, 0.5); filter: blur(30px); transform: translateZ(-50px); pointer-events: none; }
+    .ink__head { display: flex; justify-content: space-between; gap: 12px; padding: 16px 24px 12px; border-bottom: 1px solid var(--hair-dark); font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: 0.07em; text-transform: uppercase; color: var(--on-dark-3); }
+    .ink .mq__rows { margin: 0; padding: 0; transform-style: preserve-3d; }
+    .ink .mq__row { --row: 62px; transform-style: preserve-3d; transition: transform 0.8s var(--spring); }
+    .ink .mq__row + .mq__row { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045); }
+    .ink .mq__row > * { transition: opacity 0.4s var(--spring-soft); }
+    .ink .mq__row:not(.is-done) > * { opacity: 0.42; }
+    /* A held line rises off the sheet, tips toward you and turns amber. */
+    .ink .mq__row.is-held.is-done { transform: translateZ(34px) rotateX(-9deg); }
+    .ink .mq__row::before { content: ""; position: absolute; inset: 5px 10px; z-index: -1; border-radius: 12px; background: #2D3236; box-shadow: inset 0 0 0 1px rgba(232, 162, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 0 30px rgba(232, 162, 0, 0.14); opacity: 0; transition: opacity 0.45s var(--spring-soft); }
+    /* Its shadow lands on the sheet below it (the inverse of the lift, nudged down). */
+    .ink .mq__row::after { content: ""; position: absolute; inset: 10px 4% -6px; border-radius: 14px; background: rgba(0, 0, 0, 0.78); filter: blur(12px); opacity: 0; transform: rotateX(9deg) translateZ(-34px) translateY(26px); transition: opacity 0.6s var(--spring-soft); pointer-events: none; }
+    .ink .mq__row.is-held.is-done::before, .ink .mq__row.is-held.is-done::after { opacity: 1; }
+    .ink__scan { position: absolute; left: 12px; right: 12px; top: 0; height: 2px; border-radius: 1px; background: linear-gradient(90deg, rgba(15, 215, 106, 0), var(--lime) 12%, var(--lime) 88%, rgba(15, 215, 106, 0)); box-shadow: 0 0 16px rgba(15, 215, 106, 0.55); opacity: 0; pointer-events: none; will-change: transform, opacity; }
+    .ink__scan::before { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 64px; background: linear-gradient(180deg, rgba(15, 215, 106, 0), rgba(15, 215, 106, 0.08)); }
+    .ink .mq__note { padding-left: 4px; }
+    @media (max-width: 1023px) {
+      .ink { perspective: 1100px; }
+      .ink .mq__row { --row: 52px; padding-inline: 16px; column-gap: 14px; }
+      .ink__head { padding-inline: 16px; }
+      [data-proto="invoice"] .stage__grid { align-content: start; gap: 18px; padding-top: 22px; }
+      [data-proto="invoice"] .label, [data-proto="invoice"] .match__title { display: none; }
+    }
+
+    /* ---------- 2. Starlink globe ---------- */
+    /* The Earth fills the stage's lower right; its square canvas fades out at the left edge. */
+    .gl__box { position: absolute; right: 0; top: 0; z-index: 0; height: 100%; aspect-ratio: 1; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%); mask-image: linear-gradient(90deg, transparent 0%, #000 22%); }
+    /* The lower Earth falls away into the stage, so the eye goes to the horizon and the link. */
+    .gl::after { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(180deg, rgba(31, 35, 38, 0) 52%, rgba(31, 35, 38, 0.94) 100%); }
+    .gl .readout { top: 18px; bottom: auto; }
+    .gl .stage__grid { pointer-events: none; }
+    .gl .stage__grid > div { pointer-events: auto; }
+    .gl__lab[data-l="gate"] { translate: -100% 0; }
+    .gl__box:active { cursor: grabbing; }
+    .gl__globe, .gl__over { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .gl__globe { opacity: 0; transition: opacity 1.2s var(--spring-soft); }
+    .gl.is-ready .gl__globe { opacity: 1; }
+    .gl__lab { position: absolute; left: 0; top: 0; z-index: 2; display: flex; align-items: center; gap: 8px; font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: 0.07em; text-transform: uppercase; color: var(--on-dark-2); white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.4s var(--spring-soft); }
+    .gl__lab.is-on { opacity: 1; }
+    .gl__lab b { font-weight: 500; color: #fff; }
+    .gl .sat__brand { margin-top: 18px; }
+    .gl .sat__read { margin-top: 26px; max-width: 26rem; }
+    .gl .sat__read { border-top-color: var(--hair-dark); }
+    .gl .sat__read dt { color: var(--on-dark-3); }
+    .gl .sat__read dd { color: #fff; }
+    .gl .sat__read dd.is-ok { color: var(--lime); }
+    .gl__off { display: none; margin: 0; font: 500 12px/1.5 var(--mono); color: var(--on-dark-3); }
+    .gl.is-offline .gl__off { display: block; }
+    @media (max-width: 1023px) {
+      .gl .stage__grid { align-content: start; padding-top: 28px; }
+      .gl__box { top: auto; bottom: 0; left: 0; height: auto; width: 100%; -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%); mask-image: linear-gradient(180deg, transparent 0%, #000 30%); }
+      .gl .sat__brand, .gl .sat__read { margin-top: 12px; }
+    }
+
+    /* ---------- 3. Hero depth ---------- */
+    .dh { position: relative; height: calc(100vh - var(--bar)); height: calc(100svh - var(--bar)); min-height: 560px; overflow: hidden; background: var(--gun); color: #fff; }
+    .dh__layer { position: absolute; inset: 0; will-change: transform; }
+    .dh__film img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 72% 50%; }
+    @media (max-width: 1023px) and (max-aspect-ratio: 4/5) { .dh__film img { object-position: 50% 50%; } }
+    .dh .hero__line[data-line="3"] { opacity: 1; visibility: visible; transform: translateY(-50%); }
+    @media (max-width: 767px) { .dh .hero__line[data-line="3"] { transform: none; } }
+    .dh .vcard { opacity: 1; visibility: visible; }
+    .dh .vcard .vcard__leader { display: none; }
+    .dh__card { position: absolute; left: 0; top: 0; z-index: 3; will-change: transform; }
+    .dh__card .vcard { position: static; }
+    .dh__glare { position: absolute; left: 0; top: 0; width: 260px; height: 260px; margin: -130px 0 0 -130px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0)); opacity: 0; pointer-events: none; transition: opacity 0.4s var(--spring-soft); }
+    .dh.is-hover .dh__glare { opacity: 1; }
+    .dh__leader { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+    .dh__leader .lo { stroke: var(--lime); stroke-width: 1.25; filter: drop-shadow(0 0 3px rgba(15, 215, 106, 0.9)); }
+    .dh__leader .lq { fill: var(--lime); }
+    .dh__leader .lr { fill: none; stroke: var(--lime); stroke-width: 1; opacity: 0.35; }
+    .dh .hero__hud { opacity: 1; }
+    .dh__note { position: absolute; left: 50%; top: 14px; z-index: 4; transform: translateX(-50%); margin: 0; padding: 7px 12px; border-radius: 8px; background: rgba(0, 0, 0, 0.45); font: 500 11px/1.3 var(--mono); color: rgba(255, 255, 255, 0.7); white-space: nowrap; }
+  </style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="i-tick" viewBox="0 0 24 24"><path d="M6 12.5l4 4L18 8.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-face" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 47c1.7-6.9 8-10.5 16-10.5S38.3 40.1 40 47" opacity="0.8"/><path d="M24 8.3 17.6 11.6 14.6 18 15.4 25 19 30.6 24 32.9 29 30.6 32.6 25 33.4 18 30.4 11.6Z" stroke-width="0.9"/><path d="M17.6 11.6 20.2 18.6 24 15.2 27.8 18.6 30.4 11.6M24 8.3V15.2M14.6 18 20.2 18.6M27.8 18.6 33.4 18M20.2 18.6 24 23 27.8 18.6M15.4 25 21 27.6 24 23 27 27.6 32.6 25M19 30.6 21 27.6M29 30.6 27 27.6M21 27.6H27M24 32.9 21 27.6M24 32.9 27 27.6" stroke-width="0.55" opacity="0.5"/></g><g fill="currentColor"><circle cx="20.2" cy="18.6" r="1.15"/><circle cx="27.8" cy="18.6" r="1.15"/><circle cx="24" cy="23" r="1"/><circle cx="21" cy="27.6" r="0.95"/><circle cx="27" cy="27.6" r="0.95"/><circle cx="24" cy="15.2" r="0.7"/><circle cx="24" cy="8.3" r="0.7"/><circle cx="17.6" cy="11.6" r="0.7"/><circle cx="30.4" cy="11.6" r="0.7"/><circle cx="14.6" cy="18" r="0.7"/><circle cx="33.4" cy="18" r="0.7"/><circle cx="15.4" cy="25" r="0.7"/><circle cx="32.6" cy="25" r="0.7"/><circle cx="19" cy="30.6" r="0.7"/><circle cx="29" cy="30.6" r="0.7"/><circle cx="24" cy="32.9" r="0.7"/></g></symbol>
+    <symbol id="i-arrow" viewBox="0 0 16 16"><path d="M3 8h9.5M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </svg>
+
+  <header class="lbar">
+    <b>3D lab</b>
+    <nav class="seg" aria-label="Prototypes"><a href="#p1">01 Invoice in depth</a><a href="#p2">02 Starlink globe</a><a href="#p3">03 Hero depth</a></nav>
+    <nav class="seg" aria-label="Motion"><a href="?" data-motion="full">Full motion</a><a href="?motion=reduce" data-motion="reduce">Reduced motion</a></nav>
+    <span class="note">Prototypes only. Nothing here is on the site.</span>
+  </header>
+
+  <!-- ============================== 01 INVOICE IN DEPTH ============================== -->
+  <section class="spec" id="p1">
+    <div class="wrap spec__head">
+      <p class="spec__name">01 Invoice in depth <span>Matching section · replaces the flat lens</span></p>
+      <p class="spec__why">The invoice lies back like a sheet on a desk, and a scan runs down it. Verified lines settle flat with their tick. Held lines rise off the page toward you, turn amber and cast a shadow, so what the check found stands out at a glance.</p>
+      <p class="spec__cost">Cost: CSS 3D on the existing rows. No library. Scroll to play.</p>
+    </div>
+    <div class="scrolly" data-proto="invoice">
+      <div class="sticky">
+        <div class="stage dark">
+          <div class="wrap stage__grid">
+            <div>
+              <p class="label"><span class="label__idx">02</span>Line-by-line matching</p>
+              <h2 class="match__title">Every line, matched to the gate.</h2>
+              <p class="match__lead">One subcontractor’s weekly invoice, checked worker by worker against the gate record.</p>
+              <div class="mq__tots">
+                <div class="mq__tot"><span>Verified</span><strong data-t="ver">£0</strong></div>
+                <div class="mq__tot"><span>Held for query</span><strong data-t="held" style="color: var(--amber)">£0</strong></div>
+                <div class="mq__split" aria-hidden="true"><i class="mq__v" style="transform: scaleX(0)"></i><i class="mq__x" style="transform: scaleX(0)"></i></div>
+                <p class="mq__count"><span class="mq__n">0</span> of 8 lines checked · £9,991 claimed</p>
+              </div>
+            </div>
+            <div class="ink">
+              <div class="ink__sheet">
+                <i class="ink__floor" aria-hidden="true"></i>
+                <div class="ink__head"><span>Invoice · week 42</span><span>8 lines</span></div>
+<ol class="mq__rows" aria-label="Invoice lines and their gate records">
+                <li class="mq__row is-ok" data-v="1134" data-h="0" style="--c:0.8077;--g:0.8077"><span class="mq__who"><strong>W-0412</strong><span class="mq__sub"><span class="mq__trade">Groundworks · 42.0&#8239;h</span></span></span><span class="mq__bar" aria-hidden="true"><i class="mq__gate"></i><i class="mq__claim"></i></span><span class="mq__res"><svg class="mq__tick" aria-hidden="true"><use href="#i-tick"/></svg>Verified</span></li>
+                <li class="mq__row is-held" data-v="1365" data-h="75" style="--c:0.9231;--g:0.875"><span class="mq__who"><strong>W-0877</strong><span class="mq__sub"><span class="mq__trade">Brickwork · 48.0&#8239;h</span><span class="mq__why">2.5&#8239;h over the gate</span></span></span><span class="mq__bar" aria-hidden="true"><i class="mq__gate"></i><i class="mq__gap"></i><i class="mq__claim"></i></span><span class="mq__res">£75 held</span></li>
+                <li class="mq__row is-ok" data-v="1440" data-h="0" style="--c:0.7692;--g:0.7692"><span class="mq__who"><strong>W-1034</strong><span class="mq__sub"><span class="mq__trade">M&amp;E · 40.0&#8239;h</span></span></span><span class="mq__bar" aria-hidden="true"><i class="mq__gate"></i><i class="mq__claim"></i></span><span class="mq__res"><svg class="mq__tick" aria-hidden="true"><use href="#i-tick"/></svg>Verified</span></li>
+                <li class="mq__row is-held" data-v="0" data-h="880" style="--c:0.7692;--g:0"><span class="mq__who"><strong>W-1188</strong><span class="mq__sub"><span class="mq__trade">Labourer · 40.0&#8239;h</span><span class="mq__why">No gate scan all week</span></span></span><span class="mq__bar" aria-hidden="true"><i class="mq__gate"></i><i class="mq__gap"></i><i class="mq__claim"></i></span><span class="mq__res">£880 held</span></li>
+                <li class="mq__row is-ok" data-v="1395" data-h="0" style="--c:0.8654;--g:0.8654"><span class="mq__who"><strong>W-0655</strong><span class="mq__sub"><span class="mq__trade">Scaffolding · 45.0&#8239;h</span></span></span><span class="mq__bar" aria-hidden="true"><i class="mq__gate"></i><i class="mq__claim"></i></span><span class="mq__res"><svg class="mq__tick" aria-hidden="true"><use href="#i-tick"/></svg>Verified</span></li>
+                <li class="mq__row is-ok" data-v="1276" data-h="0" style="--c:0.8462;--g:0.8462"><span class="mq__who"><strong>W-0903</strong><span class="mq__sub"><span class="mq__trade">Carpentry · 44.0&#8239;h</span></span></span><span class="mq__bar" aria-hidden="true"><i class="mq__gate"></i><i class="mq__claim"></i></span><span class="mq__res"><svg class="mq__tick" aria-hidden="true"><use href="#i-tick"/></svg>Verified</span></li>
+                <li class="mq__row is-held" data-v="1316" data-h="84" style="--c:0.9615;--g:0.9038"><span class="mq__who"><strong>W-0348</strong><span class="mq__sub"><span class="mq__trade">Plastering · 50.0&#8239;h</span><span class="mq__why">Left 15:00 on Friday</span></span></span><span class="mq__bar" aria-hidden="true"><i class="mq__gate"></i><i class="mq__gap"></i><i class="mq__claim"></i></span><span class="mq__res">£84 held</span></li>
+                <li class="mq__row is-ok" data-v="1026" data-h="0" style="--c:0.7308;--g:0.7308"><span class="mq__who"><strong>W-1120</strong><span class="mq__sub"><span class="mq__trade">Dry lining · 38.0&#8239;h</span></span></span><span class="mq__bar" aria-hidden="true"><i class="mq__gate"></i><i class="mq__claim"></i></span><span class="mq__res"><svg class="mq__tick" aria-hidden="true"><use href="#i-tick"/></svg>Verified</span></li>
+              </ol>
+                <i class="ink__scan" aria-hidden="true"></i>
+              </div>
+              <p class="mq__note">Illustrative invoice. Rates and hours are examples.</p>
+            </div>
+          </div>
+          <span class="readout" data-readout></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== 02 STARLINK GLOBE ============================== -->
+  <section class="spec" id="p2">
+    <div class="wrap spec__head">
+      <p class="spec__name">02 Starlink globe <span>Installation section · alongside or instead of the satellite card</span></p>
+      <p class="spec__why">A dot-matrix Earth turns to the UK. A gate pings, and its check-ins climb to a satellite and come down to UK servers. As satellites pass, the link hands over from one to the next. Orbits are drawn at their real height, 550&nbsp;km; the passes are sped up. Drag the globe to spin it.</p>
+      <p class="spec__cost">Cost: the COBE globe, about 12 KB with its WebGL helper, bundled with the site. Pauses off screen; phones get a smaller globe; reduced motion gets the finished frame.</p>
+    </div>
+    <div class="scrolly" data-proto="globe">
+      <div class="sticky">
+        <div class="stage dark gl">
+          <div class="wrap stage__grid">
+            <div>
+              <p class="label"><span class="label__idx">07</span>Installation</p>
+              <h2>Any gate. Online by satellite.</h2>
+              <p class="lead">Every terminal connects over Starlink satellite internet, so the gate doesn’t depend on site Wi-Fi or a mobile signal.</p>
+              <p class="sat__brand"><span>Connected by</span><img src="/site/assets/brand/starlink-white.png" width="612" height="101" alt="Starlink"></p>
+              <dl class="sat__read mono">
+                <div><dt>Link</dt><dd data-r="link">Gate 2</dd></div>
+                <div><dt>Sent</dt><dd data-r="sent">0</dd></div>
+                <div><dt>Queued</dt><dd data-r="queue">0</dd></div>
+              </dl>
+              <p class="gl__off">The globe library could not load (it comes from a CDN in this lab).</p>
+            </div>
+
+          </div>
+          <div class="gl__box" aria-hidden="true">
+            <canvas class="gl__globe"></canvas>
+            <canvas class="gl__over"></canvas>
+            <span class="gl__lab" data-l="gate"><b>Gate 2 · North</b></span>
+            <span class="gl__lab" data-l="srv">UK servers</span>
+          </div>
+          <span class="readout">Illustrative. Satellite passes sped up.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== 03 HERO DEPTH ============================== -->
+  <section class="spec" id="p3">
+    <div class="wrap spec__head">
+      <p class="spec__name">03 Hero depth <span>Hero · the film's last frame, where the card locks on</span></p>
+      <p class="spec__why">The film, the viewfinder corners, the words and the card sit on separate planes and shift with the pointer, so the card reads as glass floating in front of the gate. The leader stays tied to the terminal, and the glass catches the light as it tilts.</p>
+      <p class="spec__cost">Cost: a few lines of script, transform only. Mouse and trackpad only; phones keep the still composition.</p>
+      <div class="spec__ctl">Depth <span class="seg" role="group" aria-label="Depth"><button type="button" data-depth="on" aria-pressed="true">On</button><button type="button" data-depth="off" aria-pressed="false">Off</button></span></div>
+    </div>
+    <div class="dh" data-proto="hero">
+      <div class="dh__layer dh__film"><picture><source media="(max-width: 1023px) and (max-aspect-ratio: 4/5)" srcset="/site/assets/frames-mobile/frame_0124.webp"><img src="/site/assets/frames/frame_0124.webp" width="1600" height="900" alt=""></picture></div>
+      <div class="hero__shade" aria-hidden="true"></div>
+      <div class="dh__layer dh__frame"><div class="hero__frame" aria-hidden="true"></div></div>
+      <div class="dh__layer dh__text">
+        <div class="wrap hero__content">
+          <p class="hero__line" data-line="3"><span class="hero__idx">03</span>Only verified labour gets paid.</p>
+        </div>
+      </div>
+      <svg class="dh__leader" aria-hidden="true"><line class="lo" x1="0" y1="0" x2="0" y2="0"/><circle class="lr" r="7" cx="0" cy="0"/><circle class="lq" r="3" cx="0" cy="0"/></svg>
+      <div class="dh__card">
+<div class="vcard is-scan is-link is-ok on" aria-hidden="true">
+          <svg class="vcard__leader"><line class="ln" x1="0" y1="0" x2="0" y2="0"/><line class="lo" x1="0" y1="0" x2="0" y2="0"/><circle class="lr" r="7" cx="0" cy="0"/><circle class="lp" r="3" cx="0" cy="0"/><circle class="lq" r="3" cx="0" cy="0"/><circle class="lk" r="2.5" cx="0" cy="0"/></svg>
+          <div class="vcard__frame"></div>
+          <div class="vcard__body">
+            <div class="vcard__top"><span class="vcard__live"></span><span class="vcard__gate">Gate 2 · North</span><span class="vcard__clock">07:41:08</span></div>
+            <div class="vcard__who">
+              <span class="vcard__face"><svg class="fa"><use href="#i-face"/></svg><svg class="fa fa--ok"><use href="#i-face"/></svg><i class="vcard__sweep"></i></span>
+              <span class="vcard__id"><strong>W-0412</strong><span>Groundworks</span></span>
+            </div>
+            <div class="vcard__state">
+              <span class="vcard__scan"><span class="spin"></span>Matching face</span>
+              <span class="vcard__ok"><svg class="tick tk"><use href="#i-tick"/></svg>Verified</span>
+              <span class="vcard__in">Clocked in</span>
+            </div>
+          </div>
+        </div>
+      </div>
+<div class="hero__hud" aria-hidden="true">
+          <div class="wrap hero__hud-in">
+            <ol class="hero__rail"><li><span>01</span><b>Verify</b><i></i></li><li><span>02</span><b>Match</b><i></i></li><li><span>03</span><b>Pay</b><i></i></li></ol>
+            <p class="hero__tele"><span class="hero__live"></span><span class="hero__gate">Gate 2 · North</span><span class="hero__time">07:40:52</span></p>
+          </div>
+        </div>
+      <p class="dh__note" hidden>Pointer depth needs a mouse or trackpad.</p>
+    </div>
+    <div style="height: 30vh"></div>
+  </section>
+
+  <script src="/site/assets/vendor/lenis.min.js"></script>
+  <script type="module" src="/lab/depth.js"></script>
+</body>
+</html>

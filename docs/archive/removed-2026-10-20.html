@@ -1,0 +1,77 @@
+<!-- Removed from site/index.html on 2026-10-20 in the flow review ("everything earns its place").
+     Kept here so any piece can be restored. -->
+
+<!-- Homepage section 10 Book (form). Every booking call now goes to book.html; the footer closes the page. -->
+<!-- ============================== 10 BOOK ============================== -->
+    <section class="section dark book dots" id="book" data-live>
+      <div class="wrap book__grid">
+        <div class="book__copy">
+          <p class="label"><span class="label__idx">10</span>Book a pilot</p>
+          <h2 data-split>Stop paying for labour you can’t prove.</h2>
+          <p class="lead rv">Tell us about your sites. We will show you how PayRoll Protect checks every labour claim before your payroll runs.</p>
+          <ul class="book__list rv">
+            <li><svg class="tick" aria-hidden="true"><use href="#i-tick"/></svg>90 days, no commitment</li>
+            <li><svg class="tick" aria-hidden="true"><use href="#i-tick"/></svg>Full onboarding and expert support</li>
+            <li><svg class="tick" aria-hidden="true"><use href="#i-tick"/></svg>Most sites live within two weeks</li>
+          </ul>
+          <p class="book__alt rv">Prefer to talk?<br><a href="mailto:hello@payrollprotect.co.uk">hello@payrollprotect.co.uk</a><br><a href="tel:+447940007881">+44 7940 007881</a></p>
+        </div>
+
+        <!-- Form endpoint: replace REPLACE_ME with a Formspree or Web3Forms endpoint. Until then, submitting opens the visitor's email app. -->
+        <form class="form rv" id="pilot-form" action="https://formspree.io/f/REPLACE_ME" method="POST" novalidate>
+          <div class="form__fields">
+            <div class="form__row">
+              <label class="field" for="f-name"><span class="field__label">Name</span><input id="f-name" name="name" type="text" autocomplete="name" required></label>
+              <label class="field" for="f-company"><span class="field__label">Company</span><input id="f-company" name="company" type="text" autocomplete="organization" required></label>
+            </div>
+            <div class="form__row">
+              <label class="field" for="f-role"><span class="field__label">Role</span><input id="f-role" name="role" type="text" autocomplete="organization-title"></label>
+              <label class="field" for="f-email"><span class="field__label">Work email</span><input id="f-email" name="email" type="email" autocomplete="email" required></label>
+            </div>
+            <div class="form__row">
+              <label class="field" for="f-phone"><span class="field__label">Phone</span><input id="f-phone" name="phone" type="tel" autocomplete="tel"></label>
+              <label class="field" for="f-spend"><span class="field__label">Weekly labour spend <em>optional</em></span><input id="f-spend" name="weekly_spend" type="text" inputmode="numeric"></label>
+            </div>
+            <label class="field" for="f-message"><span class="field__label">Anything we should know?</span><textarea id="f-message" name="message" rows="4"></textarea></label>
+            <input type="text" name="_gotcha" class="sr" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <input type="hidden" name="_subject" value="Pilot enquiry from payrollprotect.co.uk">
+            <p class="form__error" id="form-error" role="alert" hidden>Please add your name, company and a work email.</p>
+            <div class="form__end">
+              <button class="btn btn--primary btn--lg" type="submit" data-magnetic>Book my 90-day pilot<svg class="btn__arrow" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+              <p class="form__small mono">No obligation.</p>
+            </div>
+          </div>
+          <div class="form__done" id="form-done" hidden>
+            <svg class="tick tk" aria-hidden="true"><use href="#i-tick"/></svg>
+            <h3>Your email is ready to send.</h3>
+            <p>Your details are in a new message to hello@payrollprotect.co.uk. Send it from your email app and we will be in touch.</p>
+          </div>
+        </form>
+      </div>
+    </section>
+
+<!-- Governance data flow (four nodes). The lifecycle chart below it carries the governance facts. -->
+<div class="flow" role="list" aria-label="How attendance data moves">
+          <div class="flow__node" role="listitem"><span class="flow__k mono"><span>01 · Collect</span><i class="flow__st" aria-hidden="true"></i></span><strong>Gate terminal</strong><span>Face or fingerprint, with consent at onboarding</span></div>
+          <div class="flow__wire" aria-hidden="true"><span class="flow__track"><i class="flow__pkt"></i></span></div>
+          <div class="flow__node" role="listitem"><span class="flow__k mono"><span>02 · Protect</span><i class="flow__st" aria-hidden="true"></i></span><strong>Encrypted template</strong><span>Stored on UK-based servers</span></div>
+          <div class="flow__wire" aria-hidden="true"><span class="flow__track"><i class="flow__pkt"></i></span></div>
+          <div class="flow__node" role="listitem"><span class="flow__k mono"><span>03 · Match</span><i class="flow__st" aria-hidden="true"></i></span><strong>Attendance record</strong><span>Checked line by line against the invoice</span></div>
+          <div class="flow__wire" aria-hidden="true"><span class="flow__track"><i class="flow__pkt"></i></span></div>
+          <div class="flow__node flow__node--end" role="listitem"><span class="flow__k mono"><span>04 · Export</span><i class="flow__st" aria-hidden="true"></i></span><strong>Your payroll</strong><span>Verified hours, with the evidence attached</span></div>
+        </div>
+
+<!-- Governance lead (was) -->
+<p class="lead rv">Attendance evidence is only worth something if it is collected lawfully and kept safe. Here is where it goes.</p>
+
+<!-- Numbers: fourth stat (workers on UK sites), outside the equation row. -->
+<div class="stat"><dt>Workers on UK sites</dt><dd class="od" data-od="2.1" data-decimals="1" data-suffix="m" data-static>2.1m</dd></div>
+
+<!-- Film: third caption, which repeated the Installation headline ("Any gate. Online by satellite."). -->
+<p class="film__line" data-line="3"><span class="film__idx">03</span>Online at any site.</p>
+
+<!-- Installation lead (was) -->
+so the gate doesn’t depend on site Wi-Fi or a mobile signal. If the link drops, it keeps recording.</p>
+
+<!-- Installation step 02 (was) -->
+<p>A Starlink dish brings the gate online. No site network needed.</p>

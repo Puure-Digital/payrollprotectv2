@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Type lab | PayRoll Protect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link id="allfonts" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Montserrat:wght@300;400;500;600&family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/lab/legacy-styles.css">
+  <style>
+    body { background: #E6E8E8; }
+    .bar { position: sticky; top: 0; z-index: 50; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 12px 20px; background: rgba(31,35,38,.96); color: #fff; font: 500 13px/1.2 system-ui, sans-serif; }
+    .bar b { font-weight: 600; margin-right: 8px; }
+    .seg { display: inline-flex; background: rgba(255,255,255,.08); border-radius: 8px; padding: 3px; gap: 2px; }
+    .seg button { font: inherit; color: rgba(255,255,255,.75); background: transparent; border: 0; padding: 7px 11px; border-radius: 6px; cursor: pointer; }
+    .seg button[aria-pressed="true"] { background: #fff; color: #1F2326; }
+    .bar .note { opacity: .6; margin-left: auto; }
+    [hidden] { display: none !important; }
+
+    .spec { padding: 56px 0 72px; border-bottom: 1px solid rgba(31,35,38,.1); font-family: var(--font); font-feature-settings: var(--text-features); color: var(--ink); }
+    .spec__head { display: grid; gap: 6px; margin-bottom: 28px; }
+    .spec__name { font: 600 13px/1 system-ui, sans-serif; letter-spacing: .04em; color: #1F2326; }
+    .spec__name span { color: #7C848A; font-weight: 500; margin-left: 8px; }
+    .spec__why { font: 400 14px/1.5 system-ui, sans-serif; color: #4F565C; max-width: 70ch; margin: 0; }
+    .spec__rec { display: inline-block; margin-left: 10px; padding: 3px 8px; border-radius: 6px; background: var(--lime); color: var(--gun); font: 600 11px/1.2 system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; }
+    .spec__dark { background: var(--gun); border-radius: var(--r-xl); padding: clamp(28px, 5vw, 64px); display: grid; gap: 40px; }
+    .spec__dark .hero__title { font-size: clamp(2.5rem, 1.4rem + 4.6vw, 5rem); max-width: 12ch; margin-bottom: .35em; }
+    .spec__dark .hero__sub { margin-bottom: 1.6em; }
+    .spec__dark .stats { margin: 0; }
+    .spec__grid { display: grid; gap: 32px; margin-top: 32px; }
+    .spec__ui { display: grid; gap: 16px; align-content: start; }
+    .spec__panel { background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--shadow-1); padding: 22px; }
+    .spec__panel .kpis { grid-template-columns: 1fr 1fr; }
+    .spec__panel .lines .line { border-top: 1px solid var(--hair); }
+    @media (min-width: 1000px) { .spec__dark { grid-template-columns: 1.2fr 1fr; align-items: end; } .spec__grid { grid-template-columns: 1fr 1fr; gap: 56px; } }
+
+    .ctx { display: grid; place-items: start center; padding: 0; background: #C9CDCD; }
+    .ctx iframe { display: block; width: 100%; height: calc(100vh - 54px); border: 0; background: #fff; }
+    .ctx.phone iframe { width: 390px; height: min(844px, calc(100vh - 80px)); margin: 12px 0; border-radius: 28px; box-shadow: 0 20px 60px -20px rgba(0,0,0,.4); }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <b>Type lab</b>
+    <div class="seg" id="mode"><button data-v="spec" aria-pressed="true">Specimen</button><button data-v="ctx" aria-pressed="false">In context</button></div>
+    <div class="seg" id="dir"></div>
+    <div class="seg" id="dev" hidden><button data-v="desk" aria-pressed="true">Desktop</button><button data-v="phone" aria-pressed="false">Phone</button></div>
+    <span class="note">Lab only. Not part of the site.</span>
+  </div>
+
+  <main id="spec"></main>
+  <main id="ctx" class="ctx" hidden><iframe id="frame" title="Site preview" src="/site/index.html"></iframe></main>
+
+  <template id="tpl">
+    <section class="spec">
+      <div class="wrap">
+        <div class="spec__head"><div class="spec__name"></div><p class="spec__why"></p></div>
+        <div class="spec__dark">
+          <div>
+            <p class="label label--onDark">Construction payroll verification</p>
+            <h1 class="hero__title">Don’t approve what you can’t prove.</h1>
+            <p class="hero__sub">Biometric attendance at the gate, matched line by line against every subcontractor labour claim. Unverified hours are flagged before payroll runs.</p>
+            <a class="btn btn--primary btn--lg" href="#">Book a 90‑day pilot</a>
+          </div>
+          <dl class="stats" style="grid-template-columns: 1fr 1fr;">
+            <div class="stat"><dt>UK construction payroll</dt><dd class="od od--lime">£82bn</dd></div>
+            <div class="stat"><dt>Exposed every year</dt><dd class="od od--lime">£1.4bn</dd></div>
+          </dl>
+        </div>
+        <div class="spec__grid">
+          <div>
+            <p class="label">The result</p>
+            <h2 style="margin-bottom:.55em">Sign off payroll with the evidence attached.</h2>
+            <p class="lead">Finance opens the week’s labour claims and sees each line already matched to a verified gate record. Fourteen exceptions, not fourteen hundred lines.</p>
+            <ol class="steps" style="margin-top:28px">
+              <li class="step"><span class="step__n">01</span><div><h3>Worker verified</h3><p>Identity confirmed at a fixed device on site entry: face or fingerprint, with GPS location.</p></div></li>
+            </ol>
+          </div>
+          <div class="spec__ui">
+            <div class="spec__panel">
+              <p class="label">Labour claims this week</p>
+              <ul class="kpis">
+                <li class="kpi"><span class="kpi__fig od od--lime" style="color:var(--lime-ink)">98%</span><span class="kpi__label">Payroll verified</span></li>
+                <li class="kpi"><span class="kpi__fig od">£287,400</span><span class="kpi__label">Money protected</span></li>
+              </ul>
+            </div>
+            <ol class="feed__list">
+              <li class="frow is-ok"><span class="frow__mark"><svg class="tick" viewBox="0 0 24 24"><path d="M6 12.5l4 4L18 8.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="frow__who"><strong>W‑0655</strong><span>Scaffolding</span></span><span class="frow__time">07:44</span><span class="frow__status">Verified</span></li>
+              <li class="frow is-flag"><span class="frow__mark"></span><span class="frow__who"><strong>W‑0348</strong><span>Plastering</span></span><span class="frow__time">07:46</span><span class="frow__status">Not recognised</span></li>
+            </ol>
+            <div class="doc">
+              <div class="doc__cols"><span>Worker</span><span>Claimed</span><span>Verified</span><span>Status</span></div>
+              <ul class="lines">
+                <li class="line is-checked"><span class="line__who"><strong>W‑0412</strong><span>Groundworks</span></span><span class="line__claimed">42.0 h</span><span class="line__verified">42.0 h</span><span class="line__status"><span class="st st--ok">Verified</span></span></li>
+                <li class="line is-flag is-checked"><span class="line__who"><strong>W‑0877</strong><span>Brickwork</span></span><span class="line__claimed">48.0 h</span><span class="line__verified">45.5 h</span><span class="line__status"><span class="st st--flag">Inflated hours</span></span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </template>
+
+  <script>
+  (function () {
+    var D = [
+      { id: 'A', name: 'A · Current', fonts: 'Inter Tight + Inter',
+        why: 'What the site uses today. A neutral neo-grotesk and the default face of modern SaaS. Clean, but designers will read it as the template choice.',
+        t: { '--font': '"Inter", system-ui, sans-serif', '--font-display': '"Inter Tight", "Inter", sans-serif', '--font-label': 'var(--font)', '--font-data': 'var(--font)', '--text-features': '"cv11", "ss01"', '--display-stretch': '100%', '--w-display': '600', '--w-head': '600', '--w-title': '600', '--w-figure': '600', '--tr-display': '-0.04em', '--tr-head': '-0.03em', '--tr-figure': '-0.035em', '--label-weight': '600', '--label-track': '0.12em', '--label-stretch': '100%', '--data-weight': '600', '--data-track': '0em' } },
+      { id: 'B', name: 'B · Lineage', fonts: 'Montserrat + Geist',
+        why: 'Carries the live site forward: Montserrat for architectural headings, Geist for clinical text. Familiar to the client, but Montserrat is the most common display face on template sites.',
+        t: { '--font': '"Geist", system-ui, sans-serif', '--font-display': '"Montserrat", sans-serif', '--font-label': 'var(--font)', '--font-data': 'var(--font)', '--text-features': 'normal', '--display-stretch': '100%', '--w-display': '500', '--w-head': '400', '--w-title': '500', '--w-figure': '500', '--tr-display': '-0.035em', '--tr-head': '-0.03em', '--tr-figure': '-0.03em', '--label-weight': '500', '--label-track': '0.12em', '--label-stretch': '100%', '--data-weight': '500', '--data-track': '0em' } },
+      { id: 'C', name: 'C · Ledger', fonts: 'Geist + Geist Mono',
+        why: 'Sans for the argument, mono for the evidence. Worker IDs, timestamps, hours and labels read like a system of record. Keeps Geist from the live site.',
+        t: { '--font': '"Geist", system-ui, sans-serif', '--font-display': '"Geist", system-ui, sans-serif', '--font-label': '"Geist Mono", ui-monospace, monospace', '--font-data': '"Geist Mono", ui-monospace, monospace', '--text-features': 'normal', '--display-stretch': '100%', '--w-display': '600', '--w-head': '600', '--w-title': '600', '--w-figure': '600', '--tr-display': '-0.045em', '--tr-head': '-0.035em', '--tr-figure': '-0.04em', '--label-weight': '500', '--label-track': '0.06em', '--label-stretch': '100%', '--data-weight': '500', '--data-track': '-0.01em' } },
+      { id: 'D', name: 'D · Permit', fonts: 'Archivo + Inter',
+        why: 'An industrial grotesk with a width axis. Expanded labels echo PROTECT in the logo; heavy, compact headlines echo payroll. The most brand-specific option.',
+        t: { '--font': '"Inter", system-ui, sans-serif', '--font-display': '"Archivo", sans-serif', '--font-label': '"Archivo", sans-serif', '--font-data': 'var(--font)', '--text-features': '"cv11"', '--display-stretch': '100%', '--w-display': '700', '--w-head': '650', '--w-title': '600', '--w-figure': '650', '--tr-display': '-0.035em', '--tr-head': '-0.03em', '--tr-figure': '-0.03em', '--label-weight': '600', '--label-track': '0.16em', '--label-stretch': '125%', '--data-weight': '600', '--data-track': '0em' } },
+      { id: 'E', name: 'E · Plex', fonts: 'IBM Plex Sans + IBM Plex Mono',
+        why: 'Engineering heritage. Precise, slightly mechanical, with superb figures; mono carries the data. The most institutional of the five.',
+        t: { '--font': '"IBM Plex Sans", system-ui, sans-serif', '--font-display': '"IBM Plex Sans", sans-serif', '--font-label': '"IBM Plex Mono", ui-monospace, monospace', '--font-data': '"IBM Plex Mono", ui-monospace, monospace', '--text-features': 'normal', '--display-stretch': '100%', '--w-display': '600', '--w-head': '600', '--w-title': '600', '--w-figure': '600', '--tr-display': '-0.035em', '--tr-head': '-0.03em', '--tr-figure': '-0.03em', '--label-weight': '500', '--label-track': '0.08em', '--label-stretch': '100%', '--data-weight': '500', '--data-track': '-0.01em' } }
+    ];
+    var Q = new URLSearchParams(location.search);
+    var REC = Q.get('rec') || 'C';
+    var ONLY = Q.get('only');
+    var state = { mode: 'spec', dir: REC, dev: 'desk' };
+
+    function css(t) { return Object.keys(t).map(function (k) { return k + ':' + t[k]; }).join(';'); }
+
+    // Specimen bands
+    var spec = document.getElementById('spec'), tpl = document.getElementById('tpl');
+    D.forEach(function (d) {
+      if (ONLY && ONLY.indexOf(d.id) === -1) return;
+      var n = tpl.content.cloneNode(true), sec = n.querySelector('.spec');
+      sec.id = 'spec-' + d.id;
+      sec.setAttribute('style', css(d.t));
+      sec.querySelector('.spec__name').innerHTML = d.name + '<span>' + d.fonts + '</span>' + (d.id === REC ? '<span class="spec__rec">Recommended</span>' : '');
+      sec.querySelector('.spec__why').textContent = d.why;
+      spec.appendChild(n);
+    });
+
+    // Direction switch (in context)
+    var dirSeg = document.getElementById('dir');
+    D.forEach(function (d) {
+      var b = document.createElement('button');
+      b.textContent = d.name; b.dataset.v = d.id; b.setAttribute('aria-pressed', String(d.id === state.dir));
+      dirSeg.appendChild(b);
+    });
+
+    var frame = document.getElementById('frame');
+    function inject() {
+      var doc = frame.contentDocument; if (!doc || !doc.head) return;
+      if (!doc.getElementById('lab-fonts')) {
+        var l = doc.createElement('link'); l.id = 'lab-fonts'; l.rel = 'stylesheet'; l.href = document.getElementById('allfonts').href; doc.head.appendChild(l);
+      }
+      var s = doc.getElementById('lab-tokens');
+      if (!s) { s = doc.createElement('style'); s.id = 'lab-tokens'; doc.head.appendChild(s); }
+      var d = D.filter(function (x) { return x.id === state.dir; })[0];
+      s.textContent = ':root{' + css(d.t) + '}';
+    }
+    frame.addEventListener('load', inject);
+
+    function render() {
+      document.getElementById('spec').hidden = state.mode !== 'spec';
+      document.getElementById('ctx').hidden = state.mode !== 'ctx';
+      document.getElementById('dev').hidden = state.mode !== 'ctx';
+      document.getElementById('ctx').classList.toggle('phone', state.dev === 'phone');
+      [['mode', state.mode], ['dir', state.dir], ['dev', state.dev]].forEach(function (p) {
+        document.querySelectorAll('#' + p[0] + ' button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.v === p[1])); });
+      });
+      if (state.mode === 'spec') { var el = document.getElementById('spec-' + state.dir); if (el && window.__scrollSpec) el.scrollIntoView(); }
+      inject();
+    }
+    document.querySelector('.bar').addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      var group = b.parentElement.id;
+      if (group === 'dev' && state.dev !== b.dataset.v) { state.dev = b.dataset.v; render(); frame.src = frame.src; return; }
+      state[group] = b.dataset.v;
+      window.__scrollSpec = group === 'dir';
+      render();
+    });
+    render();
+  })();
+  </script>
+</body>
+</html>

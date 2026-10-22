@@ -1,0 +1,20 @@
+# The Next.js experiment keeps its own git history (create-next-app); not part of the site
+app/
+
+# Dependencies and builds
+node_modules/
+
+# Environment files: never commit credentials
+.env
+.env.*
+
+# Logs
+*.log
+
+# OS and editor clutter
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Machine-specific Claude Code settings
+.claude/settings.local.json
