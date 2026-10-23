@@ -202,7 +202,7 @@ function initBooking() {
   // size; stacked on a phone it closes up and the confirmation is brought into view.
   function finish(sent) {
     if (sent) {
-      title.textContent = 'Request sent.';
+      title.textContent = 'Request Sent.';
       qs('[data-done="text"]', done).textContent = 'Thank you. We’ll be in touch to plan your pilot.';
       alt.hidden = true;
     }

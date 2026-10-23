@@ -104,7 +104,7 @@ try {
     await new Promise((r) => setTimeout(r, 1400));
     return [calls, document.querySelector('[data-done="title"]').textContent];
   })()`);
-  check('book: three presses send one request', same(sent, [1, 'Request sent.']), sent);
+  check('book: three presses send one request', same(sent, [1, 'Request Sent.']), sent);
   check('book: no script errors', p.errors.length === 0, p.errors);
   p.close();
 

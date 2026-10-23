@@ -195,4 +195,20 @@ export function initLeaks() {
     }));
     return () => sts.forEach((s) => s && s.kill());
   });
+  // Phones: the cards stack (CSS sticky). As each next card slides up over the one before, that
+  // one settles back: a slight scale and a veil, tied to the scroll so it reverses with it.
+  mm.add('(max-width: 899px)', () => {
+    if (RM) return;
+    const stops = cards.slice(1).map((next, k) => {
+      const prev = cards[k];
+      const tl = gsap.timeline()
+        .to(prev, { scale: 0.94, ease: 'none' }, 0)
+        .to(qs('.leak__veil', prev), { opacity: 1, ease: 'none' }, 0);
+      return ScrollTrigger.create({
+        trigger: next, start: 'top bottom', end: () => 'top ' + (parseFloat(getComputedStyle(next).top) || 0) + 'px',
+        scrub: true, animation: tl,
+      });
+    });
+    return () => { stops.forEach((s) => s.kill()); gsap.set(cards, { clearProps: 'transform' }); gsap.set(qsa('.leak__veil', sec), { clearProps: 'opacity' }); };
+  });
 }

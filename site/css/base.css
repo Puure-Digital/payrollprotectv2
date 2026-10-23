@@ -275,6 +275,8 @@ a:not(.btn):active, .qa__q:active, .stage__pause:active { opacity: 0.6; transiti
   animation: drift 6s var(--harmonic) infinite alternate;
 }
 @keyframes drift { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-11px, 11px, 0); } }
+/* Phones hold the dot matrix still: the drift repaints a large masked layer every frame. */
+@media (max-width: 1023px) { .dots::before { animation: none; } }
 
 /* ---------- Status glyphs ---------- */
 .tick { width: 22px; height: 22px; padding: 4px; flex: none; border-radius: 50%; background: var(--lime-soft); color: var(--lime-ink); }
@@ -311,6 +313,9 @@ a:not(.btn):active, .qa__q:active, .stage__pause:active { opacity: 0.6; transiti
 .nav::before, .nav::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0; transition: opacity 0.3s var(--spring-soft); }
 .nav::before { background: rgba(243, 244, 244, 0.82); box-shadow: 0 1px 0 var(--hair); -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4); }
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) { .nav::before { background: var(--canvas); -webkit-backdrop-filter: none; backdrop-filter: none; } }
+/* Phones: frosted glass re-blurs everything that scrolls under it on every frame, which costs
+   frames on mid-range handsets. A near-opaque tint reads the same at this size. */
+@media (max-width: 1023px) { .nav::before { background: rgba(243, 244, 244, 0.96); -webkit-backdrop-filter: none; backdrop-filter: none; } }
 .nav::after { background: var(--gun); }
 .nav.is-solid { color: var(--ink); }
 .nav.is-solid::before { opacity: 1; }
