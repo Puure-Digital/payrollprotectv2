@@ -1261,8 +1261,11 @@
 
 /* ============================== BOOKING PAGE ============================== */
 /* book.html (js/booking.js). A dark stage: the request (the client's GoHighLevel form) beside an
-   estimate of the pilot it books. Then what happens next, and questions. */
-.bk { position: relative; padding: calc(var(--nav-h) + clamp(40px, 6vw, 88px)) 0 clamp(72px, 9vw, 120px); }
+   estimate of the pilot it books. Then what happens next, and questions.
+   The stage is built in the GHL form's own palette and geometry, so the hosted form belongs to the
+   page: a neutral near-black stage, cards in the form card's #141412 with its 8 px corners and the
+   same edge, and small wells in its field colour, #080808. */
+.bk { position: relative; padding: calc(var(--nav-h) + clamp(40px, 6vw, 88px)) 0 clamp(72px, 9vw, 120px); background-color: #0C0C0B; }
 .bk__grid { display: grid; gap: 40px; align-items: start; }
 @media (min-width: 1024px) { .bk__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 72px; } }
 /* On a phone or tablet the request comes first and the summary follows it. */
@@ -1275,10 +1278,9 @@
 .bk__title { margin: 0 0 0.4em; font-size: clamp(2.25rem, 1.1rem + 3.4vw, 3.875rem); letter-spacing: var(--tr-head); line-height: 1.04; color: #fff; }
 .bk__copy .lead { margin: 0 0 32px; max-width: 32rem; }
 
-/* The estimate: an instrument, at the spend passed from the home page calculator. */
-.bk__sum { position: relative; overflow: hidden; padding: 22px 24px 24px; border-radius: var(--r-lg); background: rgba(255, 255, 255, 0.035); box-shadow: inset 0 0 0 1px var(--hair-dark), inset 0 1px 0 rgba(255, 255, 255, 0.06); }
-.bk__sum::before { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px); background-size: 28px 28px; -webkit-mask-image: radial-gradient(80% 70% at 70% 30%, #000 0%, transparent 80%); mask-image: radial-gradient(80% 70% at 70% 30%, #000 0%, transparent 80%); }
-.bk__sum > * { position: relative; }
+/* The estimate, at the spend passed from the home page calculator: a card like the form's. */
+.bk__sum { position: relative; padding: 24px; border-radius: 8px; background: #141412; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 40px 80px -40px rgba(0, 0, 0, 0.7); }
+.bk__sum .tag { border-radius: 6px; background: #080808; color: var(--on-dark-3); }
 .bk__sum-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: 0.07em; text-transform: uppercase; color: var(--on-dark-3); }
 .bk__rows { display: grid; margin: 18px 0 0; }
 .bk__rows div { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--hair-dark); }
@@ -1291,7 +1293,7 @@
 .bk__tl { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0; padding-top: 18px; border-top: 1px solid var(--hair-dark); }
 .bk__tl::before { content: ""; position: absolute; left: 4px; right: 33%; top: 22px; height: 1px; background: linear-gradient(90deg, rgba(255, 255, 255, 0.3), var(--lime)); }
 .bk__tl li { position: relative; display: grid; align-content: start; gap: 8px; padding-top: 22px; font-size: 0.8125rem; line-height: 1.35; color: var(--on-dark-2); }
-.bk__tl i { position: absolute; left: 0; top: 0; width: 9px; height: 9px; border-radius: 50%; background: #272B2E; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45); }
+.bk__tl i { position: absolute; left: 0; top: 0; width: 9px; height: 9px; border-radius: 50%; background: #080808; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45); }
 .bk__tl li:last-child i { background: var(--lime); box-shadow: 0 0 0 4px rgba(15, 215, 106, 0.18); }
 .bk__tl span { font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--on-dark-3); }
 
@@ -1299,7 +1301,7 @@
    form_embed.js). The panel is the GHL card's own colour (#141412) and at most its 500 px width, so
    the heading and the hosted fields read as one surface. The heading lines up with the form's own
    padding: 16 px below 500 px wide, 40 px from 500 (where GHL switches layout). */
-.bkf { container-type: inline-size; position: relative; width: min(100%, 500px); scroll-margin-top: calc(var(--nav-h) + 20px); overflow: hidden; border-radius: var(--r-lg); background: #141412; box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.7); }
+.bkf { container-type: inline-size; position: relative; width: min(100%, 500px); scroll-margin-top: calc(var(--nav-h) + 20px); overflow: hidden; border-radius: 8px; background: #141412; box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.7); }
 /* The edge is drawn above the hosted form, so it runs unbroken past the iframe (clicks pass through). */
 .bkf::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1); pointer-events: none; }
 @media (min-width: 1024px) { .bkf { justify-self: end; } }
@@ -1339,9 +1341,6 @@
 @media (hover: hover) { .copybtn--icon:hover { color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16); } }
 .foot__row { display: inline-flex; align-items: center; gap: 2px; }
 .calc__share { margin-top: 4px; }
-@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
-  .bk__sum { background: var(--gun-2); }
-}
 
 /* ============================== FOOTER ============================== */
 /* The last instrument (js/foot.js). A dark field of points that lights green around the pointer
