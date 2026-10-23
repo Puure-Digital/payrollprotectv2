@@ -15,6 +15,8 @@ export function initScroll() {
     // Pinned scenes change the page height when ScrollTrigger refreshes; re-measure at once so
     // smooth scrolling never clamps to a stale end of page.
     ScrollTrigger.addEventListener('refresh', () => lenis.resize());
+    // Held while the preloader covers the page (js/loader.js starts it again).
+    if (document.documentElement.classList.contains('is-loading')) lenis.stop();
   }
 
   document.addEventListener('click', (e) => {

@@ -1,5 +1,5 @@
 // Smoke test for the site. Starts the local preview server on a spare port, drives headless Chrome
-// over the DevTools protocol, and checks what matters most: the figures, the booking form, the
+// over the DevTools protocol, and checks what matters most: the figures, the booking page, the
 // film's loading and the accessibility fixes. Prints one line per check; exits 1 if any fails.
 // usage: node tools/check.mjs
 import { spawn, spawnSync } from 'node:child_process';
@@ -92,20 +92,14 @@ try {
   p = await open('book.html');
   const held = await p.run(`document.querySelector('[data-s="held"]').textContent`);
   check('book: summary estimate is £46,143', held === '£46,143', held);
-  const flagged = await p.run(`(document.querySelector('.bkf__next').click(), [document.querySelector('#b-name').getAttribute('aria-invalid'), document.querySelector('#bkf-error').hidden])`);
-  check('book: an empty step flags its fields', same(flagged, ['true', false]), flagged);
-  const sent = await p.run(`(async () => {
-    const f = document.querySelector('#book-form');
-    f.elements.name.value = 'Alex Morgan'; f.elements.email.value = 'alex@example.co.uk'; f.elements.company.value = 'Northgate Homes';
-    f.action = 'https://example.invalid/f/test';
-    let calls = 0;
-    window.fetch = () => { calls++; return new Promise((r) => setTimeout(() => r({ ok: true }), 500)); };
-    f.requestSubmit(); f.requestSubmit(); f.requestSubmit();
-    await new Promise((r) => setTimeout(r, 1400));
-    return [calls, document.querySelector('[data-done="title"]').textContent];
-  })()`);
-  check('book: three presses send one request', same(sent, [1, 'Request Sent.']), sent);
+  // The request is the client's GoHighLevel form, embedded as on the live site.
+  const ghl = await p.run(`[!!document.querySelector('#book-form iframe[src="https://api.leadconnectorhq.com/widget/form/50lzTXehMgKX7CgeLy2f"]'), !!document.querySelector('script[src="https://link.msgsndr.com/js/form_embed.js"]')]`);
+  check('book: the GoHighLevel form and its embed script are on the page', same(ghl, [true, true]), ghl);
   check('book: no script errors', p.errors.length === 0, p.errors);
+  p.close();
+  p = await open('book.html?spend=1000000');
+  const heldAt = await p.run(`[document.querySelector('[data-s="spend"]').textContent, document.querySelector('[data-s="held"]').textContent]`);
+  check('book: a spend from the calculator sets the estimate', same(heldAt, ['£1,000,000', '£184,571']), heldAt);
   p.close();
 
   // The not-found page, at a nested address, so its root paths are tested too.

@@ -29,6 +29,7 @@
 
   <link rel="preload" href="assets/fonts/mona-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/geist-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preconnect" href="https://api.leadconnectorhq.com">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/sections.css">
 </head>
@@ -75,13 +76,11 @@
         <div class="bk__copy">
           <p class="label">Book a pilot</p>
           <h1 class="bk__title" data-split>Book Your 90-Day Pilot.</h1>
-          <p class="lead rv">Three short steps. We’ll be in touch to plan a pilot on one of your sites: live in about two weeks, with no commitment.</p>
+          <p class="lead rv">Leave your details and we’ll call you to plan a pilot on one of your sites: live in about two weeks, with no commitment.</p>
 
-          <aside class="bk__sum rv" aria-label="Your pilot, as you fill in the form">
+          <aside class="bk__sum rv" aria-label="Your pilot, estimated">
             <div class="bk__sum-top"><span>Your pilot</span><span class="tag">Estimate</span></div>
             <dl class="bk__rows">
-              <div><dt>Company</dt><dd data-s="company">Your company</dd></div>
-              <div><dt>Sites</dt><dd data-s="sites">—</dd></div>
               <div><dt>Weekly labour spend</dt><dd data-s="spend">£250,000</dd></div>
             </dl>
             <div class="bk__fig"><span>Held for query by day 90</span><strong data-s="held">£46,143</strong></div>
@@ -93,87 +92,36 @@
           </aside>
         </div>
 
-        <!-- Until a Formspree or Web3Forms endpoint is set, the form sends by email: with script, a written-out request; without, the browser's plain form email. To switch, put the endpoint in action, remove enctype, and name the service on the privacy page. -->
-        <form class="bkf rv" id="book-form" action="mailto:hello@payrollprotect.co.uk?subject=Pilot%20booking%20from%20payrollprotect.co.uk" method="POST" enctype="text/plain" novalidate>
-          <div class="bkf__top">
-            <span class="bkf__k">Pilot request</span>
-            <ol class="bkf__steps">
-              <li><button type="button" data-go="0" aria-current="step"><span>01</span>You</button></li>
-              <li><button type="button" data-go="1" disabled><span>02</span>Your Sites</button></li>
-              <li><button type="button" data-go="2" disabled><span>03</span>Review</button></li>
-            </ol>
-            <div class="bkf__bar" aria-hidden="true"><i></i></div>
+        <!-- The pilot request is the client's GoHighLevel form, exactly as embedded on the live site's
+             contact page (form 50lzTXehMgKX7CgeLy2f). GHL's form_embed.js sizes the iframe to the form. -->
+        <div class="bkf rv" id="book-form">
+          <div class="bkf__head">
+            <p class="bkf__k">Pilot request</p>
+            <h2 class="bkf__title">Request Your Call Slot</h2>
+            <p class="bkf__sub">We’ll confirm within 1 business day.</p>
           </div>
-
-          <div class="bkf__view">
-            <fieldset class="bkf__step" data-step="0">
-              <legend class="bkf__legend">About You</legend>
-              <div class="bkf__row">
-                <label class="field" for="b-name"><span class="field__label">Name</span><input id="b-name" enterkeyhint="next" name="name" type="text" autocomplete="name" required></label>
-                <label class="field" for="b-email"><span class="field__label">Work email</span><input id="b-email" enterkeyhint="next" name="email" type="email" autocomplete="email" required></label>
-              </div>
-              <div class="bkf__row">
-                <label class="field" for="b-role"><span class="field__label">Role <em>optional</em></span><input id="b-role" enterkeyhint="next" name="role" type="text" autocomplete="organization-title"></label>
-                <label class="field" for="b-phone"><span class="field__label">Phone <em>optional</em></span><input id="b-phone" enterkeyhint="next" name="phone" type="tel" autocomplete="tel"></label>
-              </div>
-            </fieldset>
-
-            <fieldset class="bkf__step" data-step="1">
-              <legend class="bkf__legend">Your Sites</legend>
-              <label class="field" for="b-company"><span class="field__label">Company</span><input id="b-company" enterkeyhint="next" name="company" type="text" autocomplete="organization" required></label>
-              <div class="field" role="group" aria-labelledby="b-sites-l">
-                <span class="field__label" id="b-sites-l">How many sites?</span>
-                <div class="bkf__chips">
-                  <label><input type="radio" name="sites" value="1"><span>1</span></label>
-                  <label><input type="radio" name="sites" value="2 to 5"><span>2–5</span></label>
-                  <label><input type="radio" name="sites" value="6 to 20"><span>6–20</span></label>
-                  <label><input type="radio" name="sites" value="More than 20"><span>20+</span></label>
-                </div>
-              </div>
-              <div class="field bkf__spend">
-                <span class="field__label bkf__spend-l"><label for="b-spend">Weekly subcontract labour spend</label><output class="bkf__spend-v" for="b-spend">£250,000</output></span>
-                <input class="range" id="b-spend" type="range" min="0" max="1000" step="1" value="518" aria-valuetext="£250,000 a week">
-                <input type="hidden" name="weekly_spend" value="">
-              </div>
-              <label class="field" for="b-where"><span class="field__label">Where are your sites? <em>optional</em></span><input id="b-where" enterkeyhint="next" name="location" type="text" autocomplete="address-level2"></label>
-            </fieldset>
-
-            <fieldset class="bkf__step" data-step="2">
-              <legend class="bkf__legend">Review and Send</legend>
-              <dl class="bkf__review">
-                <div><dt>Name</dt><dd data-r="name"></dd></div>
-                <div><dt>Work email</dt><dd data-r="email"></dd></div>
-                <div><dt>Company</dt><dd data-r="company"></dd></div>
-                <div><dt>Sites</dt><dd data-r="sites"></dd></div>
-                <div><dt>Weekly spend</dt><dd data-r="spend"></dd></div>
-              </dl>
-              <label class="field" for="b-message"><span class="field__label">Anything we should know? <em>optional</em></span><textarea id="b-message" name="message" rows="3"></textarea></label>
-              <p class="bkf__note">We only use these details to plan your pilot. <a href="privacy.html">Privacy</a></p>
-            </fieldset>
+          <div class="bkf__form">
+            <iframe
+              src="https://api.leadconnectorhq.com/widget/form/50lzTXehMgKX7CgeLy2f"
+              id="inline-50lzTXehMgKX7CgeLy2f"
+              title="Pilot request form"
+              data-layout="{'id':'INLINE'}"
+              data-trigger-type="alwaysShow"
+              data-trigger-value=""
+              data-activation-type="alwaysActivated"
+              data-activation-value=""
+              data-deactivation-type="neverDeactivate"
+              data-deactivation-value=""
+              data-form-name="Payroll Protect Contact Form"
+              data-height="undefined"
+              data-layout-iframe-id="inline-50lzTXehMgKX7CgeLy2f"
+              data-form-id="50lzTXehMgKX7CgeLy2f"
+              data-cookie-consent="true"
+              data-cookie-consent-provider="auto"></iframe>
+            <noscript><p class="bkf__alt">The form needs JavaScript. Email <a href="mailto:hello@payrollprotect.co.uk">hello@payrollprotect.co.uk</a> and we’ll arrange your call.</p></noscript>
           </div>
-
-          <input type="text" name="_gotcha" class="sr" tabindex="-1" autocomplete="off" aria-hidden="true">
-          <input type="hidden" name="_subject" value="Pilot booking from payrollprotect.co.uk">
-          <p class="bkf__error" id="bkf-error" role="alert" hidden></p>
-
-          <div class="bkf__nav">
-            <button class="bkf__back" type="button"><svg aria-hidden="true"><use href="#i-arrow"/></svg>Back</button>
-            <button class="btn btn--primary btn--lg bkf__next" type="button" data-magnetic>Continue<svg class="btn__arrow" aria-hidden="true"><use href="#i-arrow"/></svg></button>
-            <button class="btn btn--primary btn--lg bkf__send" type="submit" data-magnetic><span class="bkf__send-l">Book my 90-day pilot</span><svg class="btn__arrow" aria-hidden="true"><use href="#i-arrow"/></svg></button>
-            <span class="bkf__small">No obligation</span>
-          </div>
-
-          <div class="bkf__done" hidden>
-            <span class="bkf__mark" aria-hidden="true"><i></i><svg><use href="#i-tick"/></svg></span>
-            <h2 tabindex="-1" data-done="title">Your Email Is Ready to Send.</h2>
-            <p data-done="text">Your request is in a new message to hello@payrollprotect.co.uk. Send it from your email app and we’ll be in touch to plan your pilot.</p>
-            <div class="bkf__alt" data-done="alt">
-              <p>Didn’t open? Copy your request and email it to <a href="mailto:hello@payrollprotect.co.uk">hello@payrollprotect.co.uk</a>.</p>
-              <button class="copybtn" type="button"><span class="copybtn-i" aria-hidden="true"><svg class="is-a"><use href="#i-copy"/></svg><svg class="is-b"><use href="#i-tick"/></svg></span><span class="copybtn-l">Copy request</span></button>
-              <span class="sr" role="status" data-done="status"></span>
-            </div>
-          </div>
-        </form>
+          <p class="bkf__note">No spam. Your details are only used to arrange your call. <a href="privacy.html">Privacy</a></p>
+        </div>
       </div>
     </section>
 
@@ -298,6 +246,7 @@
   <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
   <script src="assets/vendor/SplitText.min.js" defer></script>
   <script src="assets/vendor/lenis.min.js" defer></script>
+  <script src="https://link.msgsndr.com/js/form_embed.js" defer></script>
   <script type="module" src="js/booking.js"></script>
 </body>
 </html>

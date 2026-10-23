@@ -71,12 +71,6 @@
   .hero .hero__sub { margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.55; }
 }
 
-.hero__loader { position: absolute; inset: 0; z-index: 6; display: grid; place-content: center; justify-items: center; gap: 22px; background: var(--gun); transition: opacity 0.6s var(--spring-soft), visibility 0s linear 0.6s; }
-.hero__loader-track { width: 112px; height: 1.5px; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
-.hero__loader-bar { height: 100%; background: var(--lime); transform: scaleX(0); transform-origin: left; transition: transform 0.25s var(--spring-soft); }
-.hero__loader-n { margin-top: -8px; font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: 0.12em; font-variant-numeric: tabular-nums; color: var(--on-dark-3); }
-.hero.is-ready .hero__loader, .hero.is-static .hero__loader { opacity: 0; visibility: hidden; }
-
 .hero__content { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; justify-content: center; padding-top: var(--nav-h); }
 /* Larger screens: the words centre in the space between the nav and the status band. */
 @media (min-width: 768px) { .hero__content { padding-bottom: 56px; } }
@@ -781,7 +775,7 @@
 @media (hover: hover) { .calc__presets button:hover { color: #fff; } }
 .calc__presets button:active { transform: scale(0.94); }
 /* Every small control takes a 44 px hit area (Apple's minimum) from a clear layer that overhangs it. */
-.calc__presets button::after, .bkf__steps button::after { content: ""; position: absolute; inset: -7px -2px; }
+.calc__presets button::after { content: ""; position: absolute; inset: -7px -2px; }
 .calc__presets button[aria-pressed="true"] { color: var(--gun); }
 .calc__pill { position: absolute; z-index: -1; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 20px) / 4); border-radius: var(--r-sm); background: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); transform: translateX(calc(var(--i, 1) * (100% + 4px))); transition: transform 0.45s var(--spring), opacity var(--t-micro) var(--spring-soft); }
 .calc__presets.is-free .calc__pill { opacity: 0; }
@@ -1266,9 +1260,8 @@
 .nf__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 26px; }
 
 /* ============================== BOOKING PAGE ============================== */
-/* book.html (js/booking.js). A dark stage: the request in three short steps on a glass card,
-   beside a live summary of the pilot it describes. Then what happens next, and questions.
-   Without script the form is one page: every field shows and it sends in one go. */
+/* book.html (js/booking.js). A dark stage: the request (the client's GoHighLevel form) beside an
+   estimate of the pilot it books. Then what happens next, and questions. */
 .bk { position: relative; padding: calc(var(--nav-h) + clamp(40px, 6vw, 88px)) 0 clamp(72px, 9vw, 120px); }
 .bk__grid { display: grid; gap: 40px; align-items: start; }
 @media (min-width: 1024px) { .bk__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 72px; } }
@@ -1282,7 +1275,7 @@
 .bk__title { margin: 0 0 0.4em; font-size: clamp(2.25rem, 1.1rem + 3.4vw, 3.875rem); letter-spacing: var(--tr-head); line-height: 1.04; color: #fff; }
 .bk__copy .lead { margin: 0 0 32px; max-width: 32rem; }
 
-/* The live summary: an instrument that follows the form. */
+/* The estimate: an instrument, at the spend passed from the home page calculator. */
 .bk__sum { position: relative; overflow: hidden; padding: 22px 24px 24px; border-radius: var(--r-lg); background: rgba(255, 255, 255, 0.035); box-shadow: inset 0 0 0 1px var(--hair-dark), inset 0 1px 0 rgba(255, 255, 255, 0.06); }
 .bk__sum::before { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px); background-size: 28px 28px; -webkit-mask-image: radial-gradient(80% 70% at 70% 30%, #000 0%, transparent 80%); mask-image: radial-gradient(80% 70% at 70% 30%, #000 0%, transparent 80%); }
 .bk__sum > * { position: relative; }
@@ -1302,90 +1295,35 @@
 .bk__tl li:last-child i { background: var(--lime); box-shadow: 0 0 0 4px rgba(15, 215, 106, 0.18); }
 .bk__tl span { font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--on-dark-3); }
 
-/* The form: a glass card with a bright top edge, the material catching the light. */
-.bkf { position: relative; scroll-margin-top: calc(var(--nav-h) + 20px); padding: clamp(20px, 2.6vw, 32px); border-radius: var(--r-lg); background: rgba(255, 255, 255, 0.045); -webkit-backdrop-filter: blur(18px) saturate(140%); backdrop-filter: blur(18px) saturate(140%); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 40px 80px -40px rgba(0, 0, 0, 0.6); }
-.bkf__top { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 14px 16px; margin-bottom: 26px; }
-.bkf__k { font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: 0.07em; text-transform: uppercase; color: var(--on-dark-3); }
-.bkf__steps { display: flex; gap: 4px; margin: 0; }
-.bkf__steps button { position: relative; display: inline-flex; align-items: baseline; gap: 7px; height: 30px; padding: 0 10px; border: 0; border-radius: 15px; background: transparent; font: 500 0.78125rem/30px var(--font); color: var(--on-dark-3); cursor: pointer; transition: color var(--t-micro) var(--spring-soft), background-color var(--t-micro) var(--spring-soft), transform 0.12s var(--spring-soft); }
-.bkf__steps button span { font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: 0.04em; }
-@media (hover: hover) { .bkf__steps button:hover:not(:disabled) { color: #fff; } }
-.bkf__steps button:active:not(:disabled) { transform: scale(0.96); }
-.bkf__steps button[aria-current="step"] { background: rgba(255, 255, 255, 0.08); color: #fff; }
-.bkf__steps button:disabled { cursor: default; }
-.bkf__bar { grid-column: 1 / -1; position: relative; height: 2px; overflow: hidden; border-radius: 1px; background: rgba(255, 255, 255, 0.1); }
-.bkf__bar i { position: absolute; inset: 0; background: var(--lime); box-shadow: 0 0 10px rgba(15, 215, 106, 0.6); transform: scaleX(0.3333); transform-origin: left center; }
-.bkf:not(.is-steps) .bkf__steps, .bkf:not(.is-steps) .bkf__bar, .bkf:not(.is-steps) .bkf__review, .bkf:not(.is-steps) .bkf__next, .bkf:not(.is-steps) .bkf__back { display: none; }
-
-/* Steps share one place, so the card keeps the height of the tallest. */
-.bkf__view { display: grid; }
-.bkf__step { display: grid; align-content: start; gap: 18px; min-width: 0; margin: 0; padding: 0; border: 0; }
-.bkf:not(.is-steps) .bkf__step + .bkf__step { margin-top: 30px; }
-.bkf.is-steps .bkf__step { grid-area: 1 / 1; }
-.bkf.is-steps .bkf__step.is-off { visibility: hidden; }
-/* Phones: each step takes its own height, so Continue sits under the last field instead of below
-   the review step's space. The leaving step fades out on top of the arriving one. */
-@media (max-width: 767px) {
-  .bkf__view { position: relative; }
-  .bkf.is-steps .bkf__step.is-off { display: none; }
-  .bkf.is-steps .bkf__step.is-leaving { position: absolute; top: 0; left: 0; right: 0; }
+/* The request: the client's GoHighLevel form (an iframe from leadconnectorhq.com, sized by GHL's
+   form_embed.js). The panel is the GHL card's own colour (#141412) and at most its 500 px width, so
+   the heading and the hosted fields read as one surface. The heading lines up with the form's own
+   padding: 16 px below 500 px wide, 40 px from 500 (where GHL switches layout). */
+.bkf { container-type: inline-size; position: relative; width: min(100%, 500px); scroll-margin-top: calc(var(--nav-h) + 20px); overflow: hidden; border-radius: var(--r-lg); background: #141412; box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.7); }
+/* The edge is drawn above the hosted form, so it runs unbroken past the iframe (clicks pass through). */
+.bkf::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1); pointer-events: none; }
+@media (min-width: 1024px) { .bkf { justify-self: end; } }
+.bkf__head { padding: 24px 17px 0; }
+.bkf__k { display: flex; align-items: center; gap: 10px; margin: 0; font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: 0.07em; text-transform: uppercase; color: var(--on-dark-3); }
+.bkf__k::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 4px var(--lime-soft); }
+.bkf__title { margin: 16px 0 8px; font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.625rem); font-weight: var(--w-head); font-stretch: var(--wide); letter-spacing: var(--tr-head); line-height: 1.1; color: #fff; }
+.bkf__sub { margin: 0; font-size: 0.9375rem; color: var(--on-dark-2); }
+/* The form's own height in each layout, so nothing moves while it loads; GHL then sets the
+   iframe's height to the form's. */
+/* The last 6 px hold the GHL card's own drop shadow, a light band against the panel: clipped. */
+.bkf__form { overflow: hidden; }
+.bkf__form iframe { display: block; width: 100%; height: 500px; margin-bottom: -6px; border: 0; background: transparent; }
+.bkf__alt { margin: 0; padding: 16px 17px; color: var(--on-dark-2); }
+.bkf__alt a, .bkf__note a { color: #fff; }
+.bkf__note { margin: 0; padding: 4px 17px 22px; font-size: 0.8125rem; color: var(--on-dark-3); }
+@container (min-width: 500px) {
+  .bkf__head { padding: 36px 41px 0; }
+  .bkf__form iframe { height: 548px; }
+  .bkf__alt, .bkf__note { padding-inline: 41px; }
+  .bkf__note { padding-bottom: 32px; }
 }
-.bkf__step:focus { outline: none; }
-.bkf__legend { margin: 0 0 14px; padding: 0; font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem); font-weight: var(--w-head); font-stretch: var(--wide); letter-spacing: var(--tr-head); color: #fff; }
-.bkf__row { display: grid; gap: 18px; }
-@media (min-width: 640px) { .bkf__row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-/* In steps, one field to a line: a single path down the card, and steps of a similar height. */
-.bkf.is-steps .bkf__row { grid-template-columns: minmax(0, 1fr); }
-.bkf .field__label { color: var(--on-dark-2); }
-.bkf .field__label em { margin-left: 4px; font-style: normal; font-weight: 400; color: var(--on-dark-3); }
-.bkf .field input:not([type="radio"]):not([type="range"]), .bkf .field textarea { background: rgba(255, 255, 255, 0.05); color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1); transition: box-shadow var(--t-micro) var(--spring-soft), background-color var(--t-micro) var(--spring-soft); }
-@media (hover: hover) { .bkf .field input:not([type="radio"]):not([type="range"]):hover, .bkf .field textarea:hover { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2); } }
-.bkf .field input:not([type="radio"]):not([type="range"]):focus, .bkf .field textarea:focus { background: rgba(255, 255, 255, 0.07); box-shadow: 0 0 0 2px var(--lime); }
-.bkf .field.is-bad input:not([type="radio"]):not([type="range"]), .bkf .field.is-bad textarea { box-shadow: 0 0 0 1.5px #FF8A75; }
-.bkf .field input[type="range"] { padding: 0; border-radius: 0; background: transparent; box-shadow: none; }
-/* Choices: the press responds at once; the chosen one lights green. */
-.bkf__chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.bkf__chips label { position: relative; cursor: pointer; }
-.bkf__chips input { position: absolute; opacity: 0; pointer-events: none; }
-.bkf__chips span { display: inline-flex; align-items: center; height: 40px; padding: 0 18px; border-radius: 20px; font: 500 0.9375rem/1 var(--font); color: var(--on-dark-2); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14); transition: color var(--t-micro) var(--spring-soft), box-shadow var(--t-micro) var(--spring-soft), background-color var(--t-micro) var(--spring-soft), transform 0.12s var(--spring-soft); }
-@media (hover: hover) { .bkf__chips label:hover span { color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28); } }
-.bkf__chips label:active span { transform: scale(0.96); }
-.bkf__chips input:checked + span { background: rgba(15, 215, 106, 0.14); color: #fff; box-shadow: inset 0 0 0 1.5px var(--lime); }
-.bkf__chips input:focus-visible + span { box-shadow: 0 0 0 2px var(--lime); }
-/* The slider needs script to mean anything, so without it the question is left out. */
-.no-js .bkf__spend { display: none; }
-.bkf__spend-l { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.bkf__spend-v { font: 500 1rem/1 var(--font); font-variant-numeric: tabular-nums; color: #fff; }
-.bkf__review { display: grid; margin: 0; }
-.bkf__review div { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--hair-dark); }
-.bkf__review dt { font: 500 var(--fs-micro)/1.4 var(--mono); letter-spacing: 0.07em; text-transform: uppercase; color: var(--on-dark-3); }
-.bkf__review dd:empty::before { content: "\2014"; color: var(--on-dark-3); }
-.bkf__review dd { margin: 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.9375rem; color: #fff; }
-.bkf__note { margin: 0; font-size: 0.875rem; color: var(--on-dark-3); }
-.bkf__note a { color: var(--on-dark-2); text-decoration: underline; text-decoration-color: var(--hair-dark-2); text-underline-offset: 3px; }
-.bkf__error { margin: 18px 0 0; font-size: 0.9375rem; color: #FFB4A8; }
-.bkf__nav { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 26px; }
-.bkf__back { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 6px; border: 0; background: none; font: 500 0.9375rem/1 var(--font); color: var(--on-dark-2); cursor: pointer; transition: color var(--t-micro) var(--spring-soft), transform 0.12s var(--spring-soft); }
-.bkf__back svg { width: 14px; height: 14px; transform: rotate(180deg); transition: transform var(--t-micro) var(--spring); }
-@media (hover: hover) { .bkf__back:hover { color: #fff; } }
-@media (hover: hover) { .bkf__back:hover svg { transform: rotate(180deg) translateX(3px); } }
-.bkf__back:active { transform: scale(0.96); }
-.bkf__small { margin-left: auto; font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: 0.07em; text-transform: uppercase; color: var(--on-dark-3); }
-.bkf__send[aria-busy="true"] { opacity: 0.7; pointer-events: none; }
-/* Sent: the card keeps its size and the confirmation settles in its middle. */
-.bkf.is-done { display: grid; align-content: center; }
-@media (min-width: 1024px) { .bkf.is-done { min-height: var(--done-h); } }
-.bkf__done { display: grid; justify-items: start; gap: 12px; padding: 8px 0; }
-.bkf__mark { position: relative; display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: rgba(15, 215, 106, 0.16); color: var(--lime); }
-.bkf__mark svg { width: 26px; height: 26px; }
-.bkf__mark i { position: absolute; inset: 0; border-radius: 50%; box-shadow: 0 0 0 1.5px var(--lime); opacity: 0; }
-.bkf__done h2 { margin: 6px 0 0; font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem); letter-spacing: var(--tr-head); color: #fff; }
-.bkf__done h2:focus { outline: none; }
-.bkf__done p { margin: 0; max-width: 34rem; color: var(--on-dark-2); }
-/* If the email app did not open: the request copies in one press. */
-.bkf__alt { display: grid; justify-items: start; gap: 14px; width: 100%; margin-top: 14px; padding-top: 20px; border-top: 1px solid var(--hair-dark); }
-.bkf__alt p { font-size: 0.875rem; color: var(--on-dark-3); }
-.bkf__alt a { color: var(--on-dark-2); text-decoration: underline; text-decoration-color: var(--hair-dark-2); text-underline-offset: 3px; }
+
+/* Copy buttons (Share this estimate, the footer email): the icon turns to a tick. */
 .copybtn { display: inline-flex; align-items: center; gap: 9px; height: 40px; padding: 0 16px; border: 0; border-radius: 20px; background: transparent; font: 500 0.9375rem/1 var(--font); color: #fff; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16); transition: box-shadow var(--t-micro) var(--spring-soft), transform 0.12s var(--spring-soft); }
 @media (hover: hover) { .copybtn:hover { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3); } }
 .copybtn:active { transform: scale(0.96); }
@@ -1402,13 +1340,7 @@
 .foot__row { display: inline-flex; align-items: center; gap: 2px; }
 .calc__share { margin-top: 4px; }
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
-  .bkf { background: var(--gun-2); -webkit-backdrop-filter: none; backdrop-filter: none; }
   .bk__sum { background: var(--gun-2); }
-}
-@media (max-width: 559px) {
-  .bkf__top { grid-template-columns: minmax(0, 1fr); }
-  .bkf__steps button { padding: 0 8px; }
-  .bkf__small { margin-left: 0; }
 }
 
 /* ============================== FOOTER ============================== */

@@ -4,6 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script>document.documentElement.className = 'js';</script>
+  <script>
+    // Preloader (js/loader.js): the first visit in a session, never with reduced motion. Its own
+    // timer clears it, so a script that fails to load can never leave the page covered.
+    try {
+      if (!sessionStorage.getItem('pp:intro') && !matchMedia('(prefers-reduced-motion: reduce)').matches && !/[?&]motion=reduce\b/.test(location.search)) {
+        document.documentElement.classList.add('is-loading');
+        setTimeout(function () { document.documentElement.classList.remove('is-loading'); }, 7000);
+      }
+    } catch (e) {}
+  </script>
   <title>PayRoll Protect | Construction payroll verification</title>
   <meta name="description" content="PayRoll Protect matches every subcontractor labour claim against biometric site attendance and flags unverified hours before payroll runs. Book a 90-day pilot.">
   <meta name="theme-color" content="#1F2326">
@@ -29,6 +39,7 @@
 
   <link rel="preload" href="assets/fonts/mona-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/geist-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/brand/mark-256.png" as="image">
   <link rel="preload" as="fetch" crossorigin href="assets/frames/frame_0001.webp" media="(min-width: 1024px), (min-aspect-ratio: 4/5)">
   <link rel="preload" as="fetch" crossorigin href="assets/frames-mobile/frame_0001.webp" media="(max-width: 1023px) and (max-aspect-ratio: 4/5)">
   <link rel="stylesheet" href="css/base.css">
@@ -50,6 +61,22 @@
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
+
+  <div class="loader" aria-hidden="true">
+    <div class="loader__panel"><i class="loader__scan"></i></div>
+    <div class="loader__mark">
+      <span class="loader__seal">
+        <i class="loader__ghost"></i>
+        <span class="loader__win"><img class="loader__img" src="assets/brand/mark-256.png" width="209" height="256" alt=""></span>
+        <i class="loader__level"></i>
+        <i class="loader__ring"></i>
+      </span>
+      <span class="loader__status mono">
+        <span class="loader__count">Verifying <b class="loader__n">000</b></span>
+        <span class="loader__ok"><svg class="tick"><use href="#i-tick"/></svg>Verified</span>
+      </span>
+    </div>
+  </div>
 
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
     <symbol id="i-tick" viewBox="0 0 24 24"><path d="M6 12.5l4 4L18 8.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -99,12 +126,6 @@
         <picture><source media="(max-width: 1023px) and (max-aspect-ratio: 4/5)" srcset="assets/frames-mobile/frame_0001.webp" width="720" height="1200"><img class="hero__poster" src="assets/img/hero-poster-1600.webp" srcset="assets/img/hero-poster-800.webp 800w, assets/img/hero-poster-1600.webp 1600w" sizes="100vw" width="1600" height="900" alt="A construction worker in hi-vis verified at a biometric terminal beside a site turnstile at dawn, the screen glowing green." loading="lazy" fetchpriority="high"></picture>
         <div class="hero__shade" aria-hidden="true"></div>
         <div class="hero__frame" aria-hidden="true"></div>
-
-        <div class="hero__loader" aria-hidden="true">
-          <img src="assets/brand/icon-192.png" width="44" height="44" alt="">
-          <div class="hero__loader-track"><div class="hero__loader-bar"></div></div>
-          <span class="hero__loader-n">00</span>
-        </div>
 
         <div class="wrap hero__content">
           <div class="hero__intro">

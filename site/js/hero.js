@@ -6,6 +6,7 @@ import { RM, clamp } from './util.js';
 import { playHeroIntro, heroLineCount, decode, labelText } from './reveal.js';
 import { STEP } from './motion.js';
 import { frameSeq } from './frames.js';
+import { loaderProgress, loaderReady, afterLoader } from './loader.js';
 
 export function initHero() {
   const hero = document.querySelector('.hero');
@@ -23,8 +24,6 @@ export function initHero() {
   const ping = card.querySelector('.vcard__leader .lr');
   const packet = card.querySelector('.vcard__leader .lk');
   const hint = hero.querySelector('.hero__hint');
-  const loaderBar = hero.querySelector('.hero__loader-bar');
-  const loaderN = hero.querySelector('.hero__loader-n');
   const frame = hero.querySelector('.hero__frame');
   const hud = hero.querySelector('.hero__hud');
   const rail = Array.from(hero.querySelectorAll('.hero__rail li'));
@@ -110,6 +109,7 @@ export function initHero() {
 
   if (RM || !canvas.getContext) {
     hero.classList.add('is-static');
+    loaderReady();
     gsap.set(heroRv, { opacity: 1, y: 0 });
     gsap.set(label, { opacity: 1 });
     playHeroIntro();
@@ -214,12 +214,12 @@ export function initHero() {
     hero.classList.add('is-ready');
     layout();
     render(progress, true);
-    revealIntro();
+    // The first frame is drawn under the preloader; the intro waits for it to lift.
+    loaderReady();
+    afterLoader(revealIntro);
   }
   function onProgress() {
-    const f = Math.min(1, loaded / need);
-    loaderBar.style.transform = 'scaleX(' + f.toFixed(3) + ')';
-    if (loaderN && !ready) loaderN.textContent = String(Math.round(f * 100)).padStart(2, '0');
+    loaderProgress(Math.min(1, loaded / need));
     if (!ready && loaded >= need) markReady();
   }
   const load = (i) => seq.load(i).then((ok) => { if (ok) { loaded++; onProgress(); } });
