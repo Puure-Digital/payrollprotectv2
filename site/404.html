@@ -23,6 +23,7 @@
 
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
     <symbol id="i-tick" viewBox="0 0 24 24"><path d="M6 12.5l4 4L18 8.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 16 16"><rect x="5.5" y="5.5" width="8" height="8" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 3.5v-.25A1.75 1.75 0 0 0 8.75 1.5h-5.5A1.75 1.75 0 0 0 1.5 3.25v5.5c0 .97.78 1.75 1.75 1.75h.25" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol>
     <symbol id="i-arrow" viewBox="0 0 16 16"><path d="M3 8h9.5M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   </svg>
 
@@ -107,7 +108,7 @@
           <div>
             <p class="foot__k">Contact</p>
             <address class="foot__list">
-              <a href="mailto:hello@payrollprotect.co.uk"><span class="t">hello@payrollprotect.co.uk</span><svg class="a" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+              <span class="foot__row"><a href="mailto:hello@payrollprotect.co.uk"><span class="t">hello@payrollprotect.co.uk</span><svg class="a" aria-hidden="true"><use href="#i-arrow"/></svg></a><button class="copybtn copybtn--icon" type="button" data-copy="hello@payrollprotect.co.uk" aria-label="Copy email address"><span class="copybtn-i" aria-hidden="true"><svg class="is-a"><use href="#i-copy"/></svg><svg class="is-b"><use href="#i-tick"/></svg></span></button><span class="sr" role="status"></span></span>
               <a href="tel:+447940007881"><span class="t">+44 7940 007881</span><svg class="a" aria-hidden="true"><use href="#i-arrow"/></svg></a>
               <span class="foot__place">Romford, London</span>
             </address>
@@ -126,10 +127,12 @@
       </div>
     </div>
     <div class="foot__mark" aria-hidden="true">
+      <span class="foot__seal">
+        <span class="foot__icon foot__icon--ghost"></span>
+        <span class="foot__clip"><img class="foot__icon foot__icon--fill" src="assets/brand/mark.png" width="734" height="900" loading="lazy" alt=""></span>
+        <i class="foot__scan"></i>
+      </span>
       <span class="foot__tag"><svg class="tick"><use href="#i-tick"/></svg>Verified</span>
-      <span class="foot__word foot__word--ghost">PayRoll Protect</span>
-      <span class="foot__clip"><span class="foot__word foot__word--fill">PayRoll Protect</span></span>
-      <i class="foot__scan"></i>
     </div>
   </footer>
 

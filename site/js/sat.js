@@ -194,7 +194,7 @@ function intro(fig, sec, render) {
     gsap.to(state, { p: 0.45, duration: 1.8, ease: 'springSoft', delay: 0.3, onUpdate: draw });
     ScrollTrigger.create({
       trigger: sec, start: 'top top', end: () => '+=' + Math.round(window.innerHeight * 1.4),
-      pin: true, anticipatePin: 1,
+      pin: true,
       onUpdate: (self) => { sp = self.progress; draw(); },
     });
     draw();

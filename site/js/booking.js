@@ -21,7 +21,7 @@ import { initFoot } from './foot.js';
 import { initPilot } from './pilot.js';
 import { initReveals } from './reveal.js';
 import { initLive } from './engine.js';
-import { RM, qs, qsa, gbp } from './util.js';
+import { RM, qs, qsa, gbp, copyText, confirmCopy } from './util.js';
 import { MIN, MAX, toSpend, toV, nice, heldBy90 } from './calc.js';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -61,7 +61,7 @@ function initBooking() {
   }
   const sitesLabel = () => {
     const r = qs('input[name="sites"]:checked', form);
-    if (!r) return 'Not set';
+    if (!r) return '—';
     const t = r.nextElementSibling.textContent;
     return t + (t === '1' ? ' site' : ' sites');
   };
@@ -182,9 +182,9 @@ function initBooking() {
 
   // ---------- sending ----------
   const title = qs('[data-done="title"]', done), mark = qs('.bkf__mark', done), alt = qs('[data-done="alt"]', done);
-  const copy = qs('.bkf__copy', done), copyLabel = qs('.bkf__copy-l', done), said = qs('[data-done="status"]', done);
+  const copy = qs('.copybtn', done), copyLabel = qs('.copybtn-l', done), said = qs('[data-done="status"]', done);
   const sendLabel = qs('.bkf__send-l', form);
-  let request = '', copied;
+  let request = '';
   const written = () => [
     'Name: ' + el.name.value.trim(),
     'Work email: ' + el.email.value.trim(),
@@ -267,26 +267,7 @@ function initBooking() {
 
   // If the email app did not open, the request copies in one press.
   copy.addEventListener('click', () => {
-    const ok = () => {
-      copy.classList.add('is-copied');
-      copyLabel.textContent = 'Copied';
-      said.textContent = 'Request copied';
-      clearTimeout(copied);
-      copied = setTimeout(() => { copy.classList.remove('is-copied'); copyLabel.textContent = 'Copy request'; said.textContent = ''; }, 2400);
-    };
-    const fallback = () => {
-      const t = document.createElement('textarea');
-      t.value = request;
-      t.setAttribute('readonly', '');
-      t.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none';
-      document.body.appendChild(t);
-      t.select();
-      try { if (document.execCommand('copy')) ok(); } catch (_) { /* nothing to copy with */ }
-      t.remove();
-      copy.focus();
-    };
-    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(request).then(ok, fallback);
-    else fallback();
+    copyText(request).then((ok) => { if (ok) confirmCopy(copy, copyLabel, said, 'Copied', 'Copy request'); });
   });
 }
 

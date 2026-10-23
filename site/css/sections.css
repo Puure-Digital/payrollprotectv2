@@ -533,6 +533,9 @@
   .js .step { opacity: 0.36; }
   .js .step.is-on { opacity: 1; }
 }
+/* Without the scroll focus every step is fully legible. */
+@media (prefers-reduced-motion: reduce) { .js .step { opacity: 1; } }
+.rm .step { opacity: 1 !important; }
 
 /* The stage is a light instrument too: a header bar, then a panel with a faint grid where each
    step's view plays. Green is verified, amber is held. */
@@ -557,31 +560,69 @@
 .sv.is-on { opacity: 1; visibility: visible; transform: none; transition: opacity 0.4s var(--spring-soft) 0.06s, transform 0.6s var(--spring) 0.06s, visibility 0s; }
 
 .sv--scan { flex-direction: row; align-items: center; gap: clamp(16px, 2.4vw, 28px); }
-.sv__photo { position: relative; flex: none; height: 100%; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-md); background: var(--gun); }
-.sv__photo img { width: 100%; height: 100%; object-fit: cover; }
-/* The brackets frame the terminal screen in the photo (assets/img/terminal-verified-*.webp). */
-.sv__brackets { position: absolute; left: 44.4%; top: 19.5%; width: 23.2%; height: 48.2%; }
-.sv__brackets i { position: absolute; width: 18px; height: 18px; border: 2px solid var(--lime); }
-.sv__brackets i:nth-child(1) { left: 0; top: 0; border-right: 0; border-bottom: 0; border-top-left-radius: 4px; }
-.sv__brackets i:nth-child(2) { right: 0; top: 0; border-left: 0; border-bottom: 0; border-top-right-radius: 4px; }
-.sv__brackets i:nth-child(3) { left: 0; bottom: 0; border-right: 0; border-top: 0; border-bottom-left-radius: 4px; }
-.sv__brackets i:nth-child(4) { right: 0; bottom: 0; border-left: 0; border-top: 0; border-bottom-right-radius: 4px; }
-/* Scan plane: a full-height layer with the line on its top edge, moved by transform.
-   It passes once as the brackets lock, then every 4.8 s while the view is on screen. */
-/* The pass is white so it reads over the green verified screen. */
-.sv__brackets::after { content: ""; position: absolute; left: 6%; right: 6%; top: 0; height: 100%; background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0, rgba(255, 255, 255, 0.95) 2px, rgba(255, 255, 255, 0.28) 2px, rgba(255, 255, 255, 0) 18px); opacity: 0; transform: translateY(0); }
-.sv--scan.is-on .sv__brackets { animation: brackets 0.6s var(--spring) both 0.1s; }
-.sv--scan.is-on .sv__brackets::after { animation: scan 4.8s var(--harmonic) 0.35s infinite; }
+/* The gate terminal, built in CSS 3D: a slab of six thin layers on a galvanised post. The view
+   plays the check in causal order (js/how.js adds .is-run): the terminal turns into view, the
+   screen wakes, the brackets lock, the face points land, a scan passes, then the screen turns lime
+   and the tick lands. Without the run (reduced motion, no script) it shows the verified state.
+   On fine pointers the terminal leans toward the pointer (--tx, --ty), easing on the spring. */
+.term { position: relative; flex: none; height: 100%; aspect-ratio: 4 / 5; perspective: 1100px; }
+.term__post { position: absolute; left: 41%; top: 0; bottom: 0; width: 30%; border-radius: 6px; background: linear-gradient(90deg, #7D868C 0%, #B9C0C4 26%, #D7DCDE 40%, #A6AEB3 62%, #6E767B 100%); -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 14%, #000 86%, transparent 100%); mask-image: linear-gradient(180deg, transparent 0%, #000 14%, #000 86%, transparent 100%); }
+.term__rig { position: absolute; left: 50%; top: 50%; width: 44%; aspect-ratio: 1 / 2; transform: translate(-50%, -50%) rotateY(-18deg) rotateX(3deg); transform-style: preserve-3d; }
+.term__tilt { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateY(calc(var(--tx, 0) * 9deg)) rotateX(calc(var(--ty, 0) * -7deg)); transition: transform 0.7s var(--spring); }
+.term__shade { position: absolute; inset: 6% -10% -2% 10%; border-radius: 22px; background: rgba(20, 24, 26, 0.5); filter: blur(16px); transform: translateZ(-46px); }
+.term__ex { position: absolute; inset: 0; border-radius: 16px; background: #262D31; transform: translateZ(calc(var(--z) * -3px)); }
+.term__ex:first-of-type { background: #4A535A; }
+.term__face { position: absolute; inset: 0; overflow: hidden; border-radius: 16px; background: linear-gradient(160deg, #262C30 0%, #171B1E 45%, #0F1214 100%); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.14); }
+.term__cams { position: absolute; left: 50%; top: 4.6%; display: flex; align-items: center; gap: 7px; transform: translateX(-50%); }
+.term__cams i { width: 6px; height: 6px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #59626A, #0A0C0D 62%); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06); }
+.term__cams i:nth-child(2) { width: 9px; height: 9px; }
+.term__led { position: absolute; right: 8%; top: 4.4%; width: 4px; height: 11px; border-radius: 2px; background: #3B4247; }
+.term__led::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--lime); box-shadow: 0 0 8px var(--lime-glow); }
+.term__screen { position: absolute; left: 8.5%; right: 8.5%; top: 11%; bottom: 25%; overflow: hidden; border-radius: 7px; background: #070A0B; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05); }
+.term__wake { position: absolute; inset: 0; background: radial-gradient(120% 80% at 50% 42%, rgba(15, 215, 106, 0.16), rgba(15, 215, 106, 0) 70%), #0C1214; }
+.term__ui { position: absolute; inset: 0; width: 100%; height: 100%; }
+.term__bk path { fill: none; stroke: var(--lime); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.term__bk, .term__pts circle { transform-box: fill-box; transform-origin: center; }
+.term__mesh { fill: none; stroke: rgba(242, 244, 244, 0.22); stroke-width: 0.5; stroke-linecap: round; stroke-linejoin: round; }
+.term__pts circle { fill: rgba(242, 244, 244, 0.92); }
+/* The scan: a layer over the face region with its line on the top edge, moved by its own height. */
+.term__scan { position: absolute; left: 8%; right: 8%; top: 17%; height: 52%; opacity: 0; background: linear-gradient(180deg, var(--lime) 0, var(--lime) 2px, rgba(15, 215, 106, 0) 2px); box-shadow: 0 -1px 10px -2px var(--lime-glow); }
+.term__scan::before { content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: 26px; background: linear-gradient(180deg, rgba(15, 215, 106, 0), rgba(15, 215, 106, 0.18)); }
+.term__hint { position: absolute; left: 0; right: 0; bottom: 7%; font: 500 0.5rem/1 var(--mono); letter-spacing: 0.14em; text-align: center; text-transform: uppercase; color: var(--on-dark-3); opacity: 0; }
+.term__ok { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 8px; background: var(--lime); }
+.term__tick { width: 46px; height: 46px; fill: none; stroke: var(--gun); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.term__ok span { font: 500 0.5625rem/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--gun); }
+.term__fp { position: absolute; left: 50%; bottom: 7%; width: 24%; height: 10%; border-radius: 6px; background: linear-gradient(180deg, #08090A, #1B2023); box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.07); transform: translateX(-50%); }
+.term__glare { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(115deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 36%); transform: translateX(calc(var(--tx, 0) * -8%)); transition: transform 0.7s var(--spring); }
+
+/* The run. Delays are the causal order; the screen finishes on lime at about 1.5 s. */
+.sv--scan.is-run .term__rig { animation: term-in 0.9s var(--spring) both; }
+.sv--scan.is-run .term__wake { animation: fade-in 0.4s var(--spring-soft) both 0.25s; }
+.sv--scan.is-run .term__bk { animation: brackets 0.6s var(--spring) both 0.35s; }
+.sv--scan.is-run .term__mesh { animation: fade-in 0.5s var(--spring-soft) both 0.6s; }
+.sv--scan.is-run .term__pts circle { animation: dot-in 0.3s var(--spring-soft) both calc(0.5s + var(--i) * 0.028s); }
+.sv--scan.is-run .term__scan { animation: term-scan 0.85s var(--harmonic) both 0.62s; }
+.sv--scan.is-run .term__hint { animation: hint-life 1.2s var(--spring-soft) both 0.3s; }
+.sv--scan.is-run .term__ok, .sv--scan.is-run .term__led::after { animation: fade-in 0.3s var(--spring-soft) both 1.45s; }
+.sv--scan.is-run .term__tick { animation: tick-in 0.45s var(--spring) both 1.5s; }
+.sv--scan.is-run .term__ok span { animation: rise 0.45s var(--spring) both 1.6s; }
+/* Waiting to be seen: held on the first frame. */
+.sv--scan.is-wait, .sv--scan.is-wait * { animation-play-state: paused !important; }
+@keyframes term-in { from { opacity: 0; transform: translate(-50%, -46%) rotateY(-40deg) rotateX(8deg); } }
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes dot-in { from { opacity: 0; transform: scale(0.3); } }
+@keyframes tick-in { from { opacity: 0; transform: scale(0.6); } }
 @keyframes brackets { from { transform: scale(1.18); opacity: 0; } to { transform: none; opacity: 1; } }
-@keyframes scan { 0% { transform: translateY(0); opacity: 0; } 3% { opacity: 1; } 19% { opacity: 1; } 22%, 100% { transform: translateY(100%); opacity: 0; } }
+@keyframes term-scan { 0% { transform: translateY(0); opacity: 0; } 10%, 82% { opacity: 1; } 100% { transform: translateY(100%); opacity: 0; } }
+@keyframes hint-life { 0% { opacity: 0; } 20%, 80% { opacity: 1; } 100% { opacity: 0; } }
 .sv__read { display: grid; flex: 1; gap: 16px; margin: 0; min-width: 0; }
 .sv__read div { padding-bottom: 14px; border-bottom: 1px solid var(--hair); }
 .sv__read dt { margin-bottom: 6px; font-size: var(--fs-micro); letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-3); }
 .sv__read dd { margin: 0; font-size: 0.9375rem; color: var(--ink); }
 /* Readings follow the scan that produces them. */
-.sv--scan.is-on .sv__read div { animation: rise 0.6s var(--spring) both 0.7s; }
-.sv--scan.is-on .sv__read div:nth-child(2) { animation-delay: 0.8s; }
-.sv--scan.is-on .sv__read div:nth-child(3) { animation-delay: 0.9s; }
+.sv--scan.is-run .sv__read div { animation: rise 0.6s var(--spring) both 1.65s; }
+.sv--scan.is-run .sv__read div:nth-child(2) { animation-delay: 1.75s; }
+.sv--scan.is-run .sv__read div:nth-child(3) { animation-delay: 1.85s; }
 @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes growy { from { transform: scaleY(0); } to { transform: scaleY(1); } }
@@ -674,14 +715,13 @@
 
 @media (max-width: 559px) {
   .sv--scan { flex-direction: column; align-items: stretch; }
-  .sv__photo { height: 54%; width: auto; align-self: flex-start; }
+  .term { height: 60%; width: auto; align-self: center; }
   .sv__read { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; flex: none; }
   .sv__read dd { font-size: 0.78125rem; }
   .stage__view { height: 430px; }
 }
 
 /* ============================== 05 NUMBERS ============================== */
-.numbers { padding-top: 0; }
 .panel { position: relative; overflow: hidden; padding: clamp(40px, 6vw, 96px) clamp(20px, 5vw, 80px); border-radius: var(--r-xl); }
 .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 24px; margin: 0 0 clamp(56px, 7vw, 96px); }
 /* Below 900 px the two inputs sit side by side and the result spans beneath them. */
@@ -695,6 +735,11 @@
   .stat:nth-child(2)::before, .stat:nth-child(3)::before { position: absolute; left: -19px; bottom: 0.3em; font: 300 1.5rem/1 var(--font); color: var(--on-dark-4); }
   .stat:nth-child(2)::before { content: "×"; }
   .stat:nth-child(3)::before { content: "="; }
+}
+/* Two columns: × sits in the gutter between the inputs, = leads the result beneath them. */
+@media (max-width: 899px) {
+  .stat:nth-child(2)::before { content: "×"; position: absolute; left: -17px; bottom: 0.3em; font: 300 1.25rem/1 var(--font); color: var(--on-dark-4); }
+  .stat:nth-child(3) dd::before { content: "="; display: inline-block; margin-right: 0.3em; font-weight: 300; color: var(--on-dark-4); }
 }
 .stat dt { margin-bottom: 14px; font: 500 var(--fs-micro)/1.35 var(--mono); letter-spacing: 0.07em; text-transform: uppercase; color: var(--on-dark-3); }
 .stat dd { margin: 0; font-size: clamp(2.25rem, 1.3rem + 2.8vw, 3.5rem); font-weight: var(--w-figure); font-stretch: var(--semi); letter-spacing: -0.02em; line-height: 1; color: var(--lime); }
@@ -781,6 +826,8 @@
 .film__line[data-line="2"] { color: var(--lime); }
 .film__idx { display: block; margin-bottom: 18px; font: 500 var(--fs-label)/1 var(--mono); letter-spacing: 0.06em; color: var(--lime); }
 .film.is-static .film__line[data-line="2"], .no-js .film__line[data-line="2"] { opacity: 1; visibility: visible; }
+/* The still shows one caption, so it carries no sequence number. */
+.film.is-static .film__idx, .no-js .film__idx { display: none; }
 @media (max-width: 767px) {
   .film__gauge { height: 34vh; right: 22px; }
   .film__tick { display: none; }
@@ -936,6 +983,10 @@
 .sat__hud .sat__cap { padding: 14px 0 0; border-top: 0; }
 .sat-globe__box { position: relative; width: 100%; aspect-ratio: 1; margin-top: 8px; touch-action: pan-y; -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%); mask-image: linear-gradient(180deg, transparent 0%, #000 30%); }
 .sat-globe__earth, .sat-globe__over { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* Not pinned (phones, reduced motion): the night side of the globe fades into the stage, so the
+   panel reads as sky, horizon and link rather than a black disc. The note stays unmasked. */
+.sat-sec:not(.is-scene) .sat-globe__box { -webkit-mask-image: none; mask-image: none; }
+.sat-sec:not(.is-scene) .sat-globe__earth, .sat-sec:not(.is-scene) .sat-globe__over { -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 46%, transparent 88%); mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 46%, transparent 88%); }
 .sat-globe__earth { opacity: 0; transition: opacity 1.2s var(--spring-soft); }
 .sat-globe__box.is-ready .sat-globe__earth { opacity: 1; }
 .sat-globe__lab { position: absolute; left: 0; top: 0; font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: 0.07em; text-transform: uppercase; white-space: nowrap; color: var(--on-dark-2); pointer-events: none; opacity: 0; transition: opacity 0.4s var(--spring-soft); }
@@ -957,8 +1008,8 @@
    page and plays as it scrolls; the process, the delivery and the questions follow. */
 .ipage { padding-top: calc(var(--nav-h) + clamp(40px, 7vw, 104px)); padding-bottom: clamp(72px, 9vw, 128px); }
 .ipage__grid { display: grid; gap: 48px; align-items: center; }
-@media (min-width: 1024px) { .ipage__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 72px; } }
-.ipage__title { margin: 0 0 0.45em; font-size: clamp(2.25rem, 1.1rem + 3.4vw, 3.875rem); letter-spacing: var(--tr-head); line-height: 1.04; }
+@media (min-width: 1024px) { .ipage__grid { grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: 72px; } }
+.ipage__title { margin: 0 0 0.45em; font-size: clamp(2.25rem, 1.1rem + 3.2vw, 3.5rem); letter-spacing: var(--tr-head); line-height: 1.04; }
 .ipage__head .lead { margin: 0 0 24px; }
 .ipage__head .sat__brand { margin: 0 0 32px; padding-top: 20px; }
 
@@ -1030,23 +1081,62 @@
 .gchart__ph::before { content: ""; position: absolute; left: -1px; top: 0; bottom: 0; width: 2px; border-radius: 1px; background: linear-gradient(180deg, rgba(15, 215, 106, 0), var(--lime) 30%, var(--lime) 70%, rgba(15, 215, 106, 0)); }
 .gchart__ph::after { content: ""; position: absolute; right: 100%; top: 0; bottom: 0; width: 72px; background: linear-gradient(90deg, rgba(15, 215, 106, 0), rgba(15, 215, 106, 0.18)); -webkit-mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent); mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent); }
 .gchart__axis { margin-top: 26px; padding-top: 12px; border-top: 1px solid var(--hair); font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
-.gchart__axis span:first-child { grid-column: 2; grid-row: 1; }
-.gchart__axis span:last-child { grid-column: 2; grid-row: 1; justify-self: end; }
+.gchart__axis span:first-of-type { grid-column: 2; grid-row: 1; }
+.gchart__axis span:last-of-type { grid-column: 2; grid-row: 1; justify-self: end; }
 .gchart .chart__note { margin: 0; padding: 16px clamp(20px, 2.6vw, 30px) 20px; border-top: 1px solid var(--hair); }
 @media (hover: hover) and (pointer: fine) {
   .gchart__row { transition: opacity var(--t-micro) var(--spring-soft); }
   .gchart__rows:hover .gchart__row:not(:hover) { opacity: 0.4; }
 }
 @media (max-width: 719px) {
-  .gchart__state span { right: auto; left: 0; }
+  /* The title takes the whole line on phones; the playhead shows the state on its own. */
+  .gchart__state { display: none; }
   .gchart__row { grid-template-columns: minmax(0, 1fr); }
   .gchart__k, .gchart__track, .gchart__lab, .gchart__end { grid-column: 1; }
   .gchart__track { grid-row: 2; }
   .gchart__lab { grid-row: 3; }
   .gchart__end { grid-row: 4; }
   .gchart__axis { grid-template-columns: minmax(0, 1fr); }
-  .gchart__axis span:first-child, .gchart__axis span:last-child { grid-column: 1; }
+  .gchart__axis span:first-of-type, .gchart__axis span:last-of-type { grid-column: 1; }
 }
+
+/* 08 Governance is a dark panel, the trust section before the FAQ. The chart becomes a glass
+   instrument on the stage: hairline grid, the encrypted template as a run of sealed blocks, a
+   contract axis ruled in twelfths, and the third-party lane stopped at its source. */
+.gov__panel { display: grid; gap: clamp(40px, 5vw, 64px); }
+.gov__head { max-width: none; margin: 0; }
+@media (min-width: 1024px) {
+  .gov__head { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); column-gap: 72px; align-items: end; }
+  .gov__head .label { grid-column: 1 / -1; }
+  .gov__head h2 { margin: 0; }
+  .gov__head .lead { margin: 0 0 0.35em; }
+}
+.gov .gchart { position: relative; border-radius: var(--r-lg); background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015)); box-shadow: inset 0 0 0 1px var(--hair-dark), inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 40px 80px -40px rgba(0, 0, 0, 0.7); }
+.gov .gchart__panel { background: transparent; padding: clamp(22px, 3vw, 36px); }
+.gov .gchart__panel::before { background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px); }
+.gov .gchart__panel::after { content: ""; position: absolute; right: 8%; top: 10%; width: 46%; height: 80%; pointer-events: none; background: radial-gradient(closest-side, rgba(15, 215, 106, 0.08), rgba(15, 215, 106, 0)); }
+.gov .chart__cap, .gov .gchart__k, .gov .gchart__axis { color: var(--on-dark-3); }
+.gov .gchart__state { color: var(--on-dark-3); }
+.gov .gchart__state span:last-child { color: var(--lime); }
+.gov .gchart__rows { gap: 30px; margin-top: 36px; }
+.gov .gchart__lab { color: var(--on-dark-2); }
+.gov .gchart__end { color: #fff; }
+.gov .gchart__base { background: var(--hair-dark-2); }
+.gov .gchart__base--void { background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.26) 0 2px, transparent 2px 7px); }
+.gov .gchart__pt { background: var(--gun); }
+/* The template: sealed blocks, not a plain line. */
+.gov .gchart__bar { height: 10px; margin-top: -5px; border-radius: 2px; background: repeating-linear-gradient(90deg, rgba(242, 244, 244, 0.78) 0 12px, transparent 12px 15px); box-shadow: 0 0 18px rgba(242, 244, 244, 0.06); }
+.gov .gchart__del { background: var(--gun); }
+.gov .gchart__del .tick { background: rgba(15, 215, 106, 0.16); color: var(--lime); }
+/* Third parties: a short run from the source, then a stop. Nothing passes it. */
+.gchart__stop { position: absolute; left: 0; top: 50%; width: 22px; height: 1px; background: var(--on-dark-3); }
+.gchart__stop::after { content: ""; position: absolute; right: 0; top: -6px; width: 1px; height: 13px; background: var(--on-dark-2); }
+.gov .gchart__base--void { left: 30px; }
+.gov .gchart__axis { position: relative; margin-top: 30px; padding-top: 14px; border-top-color: var(--hair-dark); }
+/* The contract, ruled in twelfths over the track column. */
+.gchart__ticks { grid-column: 2; grid-row: 1; height: 6px; margin-top: -14px; border-right: 1px solid var(--hair-dark-2); background: repeating-linear-gradient(90deg, var(--hair-dark-2) 0 1px, transparent 1px calc(100% / 12)); }
+.gov .chart__note { border-top-color: var(--hair-dark); color: var(--on-dark-3); }
+@media (max-width: 719px) { .gchart__ticks { grid-column: 1; } }
 
 /* Pilot: claims held for query across a 90-day pilot, at the visitor's spend. A light instrument:
    the readout leads, the line draws behind a playhead, go-live is marked as the playhead passes,
@@ -1135,6 +1225,7 @@
 
 /* ============================== 08 FAQ ============================== */
 .faq__grid { display: grid; gap: 40px; }
+.faq .head { margin-bottom: 0; }
 @media (min-width: 1024px) { .faq__grid { grid-template-columns: 4fr 8fr; gap: 88px; align-items: start; } .faq .head { margin-bottom: 0; } }
 /* Accordion: the layout changes once, then rows glide from where they were (FLIP). */
 .qa { position: relative; background: var(--canvas); border-top: 1px solid var(--hair); }
@@ -1210,7 +1301,7 @@
 @media (hover: hover) { .bkf__steps button:hover:not(:disabled) { color: #fff; } }
 .bkf__steps button:active:not(:disabled) { transform: scale(0.96); }
 .bkf__steps button[aria-current="step"] { background: rgba(255, 255, 255, 0.08); color: #fff; }
-.bkf__steps button:disabled { cursor: default; opacity: 0.45; }
+.bkf__steps button:disabled { cursor: default; }
 .bkf__bar { grid-column: 1 / -1; position: relative; height: 2px; overflow: hidden; border-radius: 1px; background: rgba(255, 255, 255, 0.1); }
 .bkf__bar i { position: absolute; inset: 0; background: var(--lime); box-shadow: 0 0 10px rgba(15, 215, 106, 0.6); transform: scaleX(0.3333); transform-origin: left center; }
 .bkf:not(.is-steps) .bkf__steps, .bkf:not(.is-steps) .bkf__bar, .bkf:not(.is-steps) .bkf__review, .bkf:not(.is-steps) .bkf__next, .bkf:not(.is-steps) .bkf__back { display: none; }
@@ -1284,15 +1375,21 @@
 .bkf__alt { display: grid; justify-items: start; gap: 14px; width: 100%; margin-top: 14px; padding-top: 20px; border-top: 1px solid var(--hair-dark); }
 .bkf__alt p { font-size: 0.875rem; color: var(--on-dark-3); }
 .bkf__alt a { color: var(--on-dark-2); text-decoration: underline; text-decoration-color: var(--hair-dark-2); text-underline-offset: 3px; }
-.bkf__copy { display: inline-flex; align-items: center; gap: 9px; height: 40px; padding: 0 16px; border: 0; border-radius: 20px; background: transparent; font: 500 0.9375rem/1 var(--font); color: #fff; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16); transition: box-shadow var(--t-micro) var(--spring-soft), transform 0.12s var(--spring-soft); }
-@media (hover: hover) { .bkf__copy:hover { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3); } }
-.bkf__copy:active { transform: scale(0.96); }
-.bkf__copy:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--lime); }
-.bkf__copy-i { display: grid; width: 16px; height: 16px; }
-.bkf__copy-i svg { grid-area: 1 / 1; width: 16px; height: 16px; transition: opacity 0.2s var(--spring-soft), transform 0.35s var(--spring); }
-.bkf__copy-i .is-b { opacity: 0; transform: scale(0.5); color: var(--lime); }
-.bkf__copy.is-copied .is-a { opacity: 0; transform: scale(0.5); }
-.bkf__copy.is-copied .is-b { opacity: 1; transform: none; }
+.copybtn { display: inline-flex; align-items: center; gap: 9px; height: 40px; padding: 0 16px; border: 0; border-radius: 20px; background: transparent; font: 500 0.9375rem/1 var(--font); color: #fff; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16); transition: box-shadow var(--t-micro) var(--spring-soft), transform 0.12s var(--spring-soft); }
+@media (hover: hover) { .copybtn:hover { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3); } }
+.copybtn:active { transform: scale(0.96); }
+.copybtn:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--lime); }
+.copybtn-i { display: grid; width: 16px; height: 16px; }
+.copybtn-i svg { grid-area: 1 / 1; width: 16px; height: 16px; transition: opacity 0.2s var(--spring-soft), transform 0.35s var(--spring); }
+.copybtn-i .is-b { opacity: 0; transform: scale(0.5); color: var(--lime); }
+.copybtn.is-copied .is-a { opacity: 0; transform: scale(0.5); }
+.copybtn.is-copied .is-b { opacity: 1; transform: none; }
+/* Icon-only copy (the footer email): a 32 px disc, with a 44 px hit area around it. */
+.copybtn--icon { position: relative; width: 32px; height: 32px; padding: 0; justify-content: center; border-radius: 50%; color: var(--on-dark-2); box-shadow: none; }
+.copybtn--icon::after { content: ""; position: absolute; inset: -6px; }
+@media (hover: hover) { .copybtn--icon:hover { color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16); } }
+.foot__row { display: inline-flex; align-items: center; gap: 2px; }
+.calc__share { margin-top: 4px; }
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
   .bkf { background: var(--gun-2); -webkit-backdrop-filter: none; backdrop-filter: none; }
   .bk__sum { background: var(--gun-2); }
@@ -1332,7 +1429,7 @@
 .foot__k { margin: 0 0 14px; font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: 0.07em; text-transform: uppercase; color: var(--on-dark-3); }
 .foot__list { display: grid; justify-items: start; gap: 2px; margin: 0; font-style: normal; }
 .foot__list a, .foot__place { position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 6px 0; }
-.foot__place { color: var(--on-dark-3); }
+.foot__place { color: var(--on-dark-2); }
 /* Links: the label steps aside, an arrow slides in, and a hairline draws under it. */
 .foot__list .t { transition: transform var(--t-micro) var(--spring); }
 .foot__list .a { width: 12px; height: 12px; flex: none; color: var(--lime); opacity: 0; transform: translateX(-6px); transition: opacity var(--t-micro) var(--spring-soft), transform var(--t-micro) var(--spring); }
@@ -1370,18 +1467,21 @@
   .foot__geo { display: none; }
 }
 
-/* The mark: the name across the full width, outlined, then filled behind a scan of light.
-   Its foot runs off the bottom of the page. Sized to the width by js/foot.js. */
-.foot__mark { position: relative; padding-inline: var(--gutter); margin-top: clamp(8px, 2vw, 24px); -webkit-user-select: none; user-select: none; pointer-events: none; }
-.foot__word { display: block; margin-bottom: -0.16em; font-size: 10.6vw; font-weight: 380; font-stretch: var(--wide); letter-spacing: -0.035em; line-height: 0.9; white-space: nowrap; text-align: center; }
-.foot__word--ghost { color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.16); }
-.foot__clip { position: absolute; inset: 0; overflow: hidden; padding-inline: inherit; }
-.foot__word--fill { color: #fff; -webkit-mask-image: linear-gradient(180deg, #000 20%, rgba(0, 0, 0, 0.25) 92%); mask-image: linear-gradient(180deg, #000 20%, rgba(0, 0, 0, 0.25) 92%); }
-.foot__scan { position: absolute; top: -8%; bottom: 0; left: 0; width: 100%; pointer-events: none; opacity: 0; }
-.foot__scan::before { content: ""; position: absolute; left: -1px; top: 0; bottom: 0; width: 2px; border-radius: 1px; background: linear-gradient(180deg, rgba(15, 215, 106, 0), var(--lime) 25%, var(--lime) 85%, rgba(15, 215, 106, 0)); box-shadow: 0 0 18px rgba(15, 215, 106, 0.6); }
-.foot__scan::after { content: ""; position: absolute; right: 100%; top: 0; bottom: 0; width: 160px; background: linear-gradient(90deg, rgba(15, 215, 106, 0), rgba(15, 215, 106, 0.14)); -webkit-mask-image: linear-gradient(180deg, transparent, #000 25%, #000 85%, transparent); mask-image: linear-gradient(180deg, transparent, #000 25%, #000 85%, transparent); }
-.foot__tag { position: absolute; right: var(--gutter); top: -2px; z-index: 1; display: inline-flex; align-items: center; gap: 8px; font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: 0.07em; text-transform: uppercase; color: var(--lime); opacity: 0; transform: translateY(6px); }
+/* The mark: the shield, large and centred. It waits as a faint silhouette, then a scan of light
+   crosses it and the brand shield is lit behind the scan; Verified lands beneath. */
+.foot__mark { position: relative; display: grid; justify-items: center; gap: 28px; padding: clamp(48px, 7vw, 96px) var(--gutter) clamp(56px, 7vw, 96px); -webkit-user-select: none; user-select: none; pointer-events: none; }
+.foot__seal { --m: 80px; position: relative; display: block; }
+.foot__icon { display: block; height: clamp(200px, 28vw, 360px); width: auto; aspect-ratio: 734 / 900; }
+.foot__icon--ghost { background: rgba(255, 255, 255, 0.07); -webkit-mask: url("../assets/brand/mark.png") center / contain no-repeat; mask: url("../assets/brand/mark.png") center / contain no-repeat; }
+/* The reveal window and the scan share one box, wider than the shield by --m on every side, so
+   the glow fades out inside the window instead of being cut by it. */
+.foot__clip { position: absolute; inset: calc(var(--m) * -1); padding: var(--m); overflow: hidden; }
+.foot__icon--fill { filter: drop-shadow(0 0 48px rgba(15, 215, 106, 0.22)); }
+.foot__scan { position: absolute; inset: calc(var(--m) * -0.5) calc(var(--m) * -1); pointer-events: none; opacity: 0; }
+.foot__scan::before { content: ""; position: absolute; left: -1px; top: 0; bottom: 0; width: 2px; border-radius: 1px; background: linear-gradient(180deg, rgba(15, 215, 106, 0), var(--lime) 18%, var(--lime) 82%, rgba(15, 215, 106, 0)); box-shadow: 0 0 18px rgba(15, 215, 106, 0.6); }
+.foot__scan::after { content: ""; position: absolute; right: 100%; top: 0; bottom: 0; width: 120px; background: linear-gradient(90deg, rgba(15, 215, 106, 0), rgba(15, 215, 106, 0.14)); -webkit-mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent); mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent); }
+.foot__tag { display: inline-flex; align-items: center; gap: 8px; font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: 0.07em; text-transform: uppercase; color: var(--lime); opacity: 0; transform: translateY(6px); }
 .foot__tag .tick { width: 18px; height: 18px; padding: 3px; background: rgba(15, 215, 106, 0.16); color: var(--lime); }
-/* Without script, or with reduced motion, the name is simply filled. */
+/* Without script, or with reduced motion, the shield is simply lit. */
 .no-js .foot__clip, .rm .foot__clip { transform: none; }
 .no-js .foot__tag, .rm .foot__tag { opacity: 1; transform: none; }

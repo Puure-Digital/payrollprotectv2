@@ -140,7 +140,7 @@ function film(sec) {
 
   ScrollTrigger.create({
     trigger: sec, start: 'top top', end: () => '+=' + Math.round(window.innerHeight * 2.4),
-    pin: true, anticipatePin: 1, scrub: true, animation: tl,
+    pin: true, scrub: true, animation: tl,
     onUpdate: (self) => render(self.progress),
     onLeave: () => seq.release(), onLeaveBack: () => seq.release(),
     onRefresh: (self) => { layout(); render(self.progress, true); },

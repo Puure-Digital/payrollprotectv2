@@ -3,11 +3,11 @@
 //   only the lit points). Points near the pointer brighten and turn green, following it on a
 //   damped ease; a slow scan crosses the field every few seconds. Drawn only while the footer is
 //   on screen, and with a fine pointer only for the pointer part.
-// - The company's name across the full width, sized to fit, outlined, then filled behind a scan of
-//   light as the page reaches its end (scrubbed, so it reverses), and marked Verified.
+// - The shield, large and centred: a faint silhouette lit behind a scan of light as the page
+//   reaches its end (it runs back if the reader scrolls up past it), then marked Verified.
 // - A live London clock, and a back-to-top control whose ring shows how far down the page you are.
-// Reduced motion: no lit points or scan; the name is shown filled and verified.
-import { RM, FINE, qs, qsa, clamp } from './util.js';
+// Reduced motion: no lit points or scan; the shield is shown lit and verified.
+import { RM, FINE, qs, qsa, clamp, copyText, confirmCopy } from './util.js';
 import { live } from './engine.js';
 
 const GAP = 24;          // must match the CSS dot grid (.foot background-size)
@@ -102,32 +102,13 @@ function field(foot) {
 function mark(foot) {
   const m = qs('.foot__mark', foot);
   if (!m) return;
-  const words = qsa('.foot__word', m);
-  const clip = qs('.foot__clip', m), fill = qs('.foot__word--fill', m);
+  const clip = qs('.foot__clip', m), fill = qs('.foot__icon--fill', m);
   const scan = qs('.foot__scan', m), tag = qs('.foot__tag', m);
 
-  // The name fills the width between the gutters, whatever the screen and font.
-  function fit() {
-    words.forEach((w) => { w.style.fontSize = ''; });
-    const pad = parseFloat(getComputedStyle(m).paddingLeft) || 0;
-    const room = m.clientWidth - pad * 2;
-    const probe = words[0];
-    probe.style.display = 'inline-block';
-    const width = probe.getBoundingClientRect().width;
-    probe.style.display = '';
-    if (!width) return;
-    const size = parseFloat(getComputedStyle(probe).fontSize) * (room / width);
-    words.forEach((w) => { w.style.fontSize = size.toFixed(2) + 'px'; });
-  }
-  fit();
-  // boot.js re-measures the page once late fonts are in, after this fit.
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
-  window.addEventListener('resize', fit);
-
   // The window slides in from the left and the fill slides back by the same distance, so the
-  // letters stay put under their outlines while the window reveals them.
-  let span = m.clientWidth, at = 0;
-  window.addEventListener('resize', () => { span = m.clientWidth; set(at); });
+  // shield stays put over its silhouette while the window reveals it.
+  let span = clip.clientWidth, at = 0;
+  window.addEventListener('resize', () => { span = clip.clientWidth; set(at); });
   function set(p) {
     at = p;
     const dx = (p - 1) * span;
@@ -152,6 +133,13 @@ function mark(foot) {
     onEnter: () => tl.timeScale(1).play(),
     onLeaveBack: () => tl.timeScale(1.6).reverse(),
   });
+}
+
+// The email copies in one press; the icon turns to a tick for a moment.
+function copy(foot) {
+  qsa('[data-copy]', foot).forEach((b) => b.addEventListener('click', () => {
+    copyText(b.dataset.copy).then((ok) => { if (ok) confirmCopy(b, null, b.nextElementSibling, 'Email address copied', ''); });
+  }));
 }
 
 function clock(foot) {
@@ -183,4 +171,5 @@ export function initFoot() {
   mark(foot);
   clock(foot);
   ring(foot);
+  copy(foot);
 }

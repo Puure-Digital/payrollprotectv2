@@ -1,6 +1,6 @@
 // Exposure calculator: log-scale slider, presets, rolling figures.
 // The chosen spend is shared (spendNow, and a pp:spend event) so the pilot chart can follow it.
-import { qs, qsa, gbp } from './util.js';
+import { qs, qsa, gbp, copyText, confirmCopy } from './util.js';
 import { setOd } from './odometer.js';
 
 export const MIN = 10000, MAX = 5000000;
@@ -54,7 +54,26 @@ export function initCalc() {
     range.value = toV(s);
     update(s);
   }));
+  // A shared estimate opens at its spend (?spend=…, as "Share this estimate" writes it).
+  const asked = Number(new URLSearchParams(location.search).get('spend'));
+  if (asked >= MIN && asked <= MAX) range.value = toV(nice(asked));
   update(nice(toSpend(Number(range.value))));
+
+  // Share this estimate: phones open the share sheet; elsewhere the link is copied and the icon
+  // turns to a tick. The link reopens the page at the numbers with the same spend.
+  const share = qs('#c-share');
+  if (share) {
+    const label = qs('.copybtn-l', share), said = qs('#c-share-said');
+    share.addEventListener('click', () => {
+      const url = location.origin + location.pathname + '?spend=' + spendNow + '#numbers';
+      const text = 'Estimated payroll exposure at ' + gbp(spendNow) + ' a week of labour spend: ' + gbp(spendNow * 52 * RATE) + ' a year.';
+      if (navigator.share && matchMedia('(pointer: coarse)').matches) {
+        navigator.share({ title: 'PayRoll Protect estimate', text, url }).catch(() => {});
+        return;
+      }
+      copyText(url).then((ok) => { if (ok) confirmCopy(share, label, said, 'Link copied', 'Share this estimate'); });
+    });
+  }
 
   // Arriving from "Change the spend": the jump lands by focusing the calculator (js/scroll.js),
   // and its viewfinder locks on. The link arms it, because once focusable the calculator also

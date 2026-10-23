@@ -214,9 +214,34 @@ export function initGlobe() {
     globe.toggle(visible);
     requestAnimationFrame(() => box.classList.add('is-ready'));
   }
+  // Building the globe compiles its shaders, a ~200 ms main-thread task. It runs once, well before
+  // the section, and only when the page has been still for a moment, so no scroll ever stutters.
+  // A reader who never pauses still gets it: once the section is near, it builds straight away.
+  let started = false, waiting = false, t = 0;
+  const build = () => {
+    if (started) return;
+    started = true;
+    clearTimeout(t);
+    removeEventListener('scroll', quiet);
+    load();
+  };
+  const quiet = () => {
+    clearTimeout(t);
+    t = setTimeout(() => (window.requestIdleCallback || ((f) => setTimeout(f, 1)))(build, { timeout: 1500 }), 300);
+  };
+  // Readers pause long before they reach this section (the hero, the invoice, the numbers), so
+  // the first quiet moment after the page has settled is the time to build it.
+  const wait = () => {
+    if (waiting || started) return;
+    waiting = true;
+    addEventListener('scroll', quiet, { passive: true });
+    quiet();
+  };
+  if (document.readyState === 'complete') setTimeout(wait, 1500);
+  else addEventListener('load', () => setTimeout(wait, 1500), { once: true });
   new IntersectionObserver(([e]) => {
     visible = e.isIntersecting;
-    if (visible) load();
+    if (visible) build();
     if (globe) globe.toggle(visible);
   }, { rootMargin: '60% 0px' }).observe(sec);
   window.addEventListener('resize', () => { if (globe) layout(); });
@@ -274,7 +299,7 @@ export function initGlobe() {
     layout();
     const st = ScrollTrigger.create({
       trigger: sec, start: 'top top', end: () => '+=' + Math.round(window.innerHeight * 2.6),
-      pin: true, anticipatePin: 1,
+      pin: true,
       onUpdate: (self) => paint(self.progress),
       onRefresh: (self) => paint(self.progress),
     });

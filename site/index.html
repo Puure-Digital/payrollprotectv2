@@ -53,6 +53,7 @@
 
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
     <symbol id="i-tick" viewBox="0 0 24 24"><path d="M6 12.5l4 4L18 8.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 16 16"><rect x="5.5" y="5.5" width="8" height="8" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 3.5v-.25A1.75 1.75 0 0 0 8.75 1.5h-5.5A1.75 1.75 0 0 0 1.5 3.25v5.5c0 .97.78 1.75 1.75 1.75h.25" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol>
     <symbol id="i-face" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 47c1.7-6.9 8-10.5 16-10.5S38.3 40.1 40 47" opacity="0.8"/><path d="M24 8.3 17.6 11.6 14.6 18 15.4 25 19 30.6 24 32.9 29 30.6 32.6 25 33.4 18 30.4 11.6Z" stroke-width="0.9"/><path d="M17.6 11.6 20.2 18.6 24 15.2 27.8 18.6 30.4 11.6M24 8.3V15.2M14.6 18 20.2 18.6M27.8 18.6 33.4 18M20.2 18.6 24 23 27.8 18.6M15.4 25 21 27.6 24 23 27 27.6 32.6 25M19 30.6 21 27.6M29 30.6 27 27.6M21 27.6H27M24 32.9 21 27.6M24 32.9 27 27.6" stroke-width="0.55" opacity="0.5"/></g><g fill="currentColor"><circle cx="20.2" cy="18.6" r="1.15"/><circle cx="27.8" cy="18.6" r="1.15"/><circle cx="24" cy="23" r="1"/><circle cx="21" cy="27.6" r="0.95"/><circle cx="27" cy="27.6" r="0.95"/><circle cx="24" cy="15.2" r="0.7"/><circle cx="24" cy="8.3" r="0.7"/><circle cx="17.6" cy="11.6" r="0.7"/><circle cx="30.4" cy="11.6" r="0.7"/><circle cx="14.6" cy="18" r="0.7"/><circle cx="33.4" cy="18" r="0.7"/><circle cx="15.4" cy="25" r="0.7"/><circle cx="32.6" cy="25" r="0.7"/><circle cx="19" cy="30.6" r="0.7"/><circle cx="29" cy="30.6" r="0.7"/><circle cx="24" cy="32.9" r="0.7"/></g></symbol>
     <symbol id="i-arrow" viewBox="0 0 16 16"><path d="M3 8h9.5M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   </svg>
@@ -68,8 +69,8 @@
         <ul>
           <li><a href="#gap" data-nav>The gap</a></li>
           <li><a href="#match" data-nav>Matching</a></li>
-          <li><a href="#how" data-nav>How it works</a></li>
           <li><a href="#numbers" data-nav>The numbers</a></li>
+          <li><a href="#how" data-nav>How it works</a></li>
           <li><a href="#install" data-nav>Installation</a></li>
           <li><a href="#pilot" data-nav>Pilot</a></li>
           <li><a href="#faq" data-nav>FAQ</a></li>
@@ -304,12 +305,56 @@
       </div>
     </section>
 
-    <!-- ============================== 04 HOW ============================== -->
+    <!-- ============================== 04 NUMBERS ============================== -->
+    <section class="section numbers gx" id="numbers" data-live>
+      <div class="wrap">
+        <div class="panel dark dots">
+          <div class="head">
+            <p class="label"><span class="label__idx">04</span>The numbers</p>
+            <h2 data-split>The cost of trusting the invoice.</h2>
+          </div>
+          <dl class="stats">
+            <div class="stat"><dt>UK construction payroll</dt><dd class="od" data-od="82" data-prefix="£" data-suffix="bn" data-static>£82bn</dd></div>
+            <div class="stat"><dt>Estimated payroll fraud rate</dt><dd class="od" data-od="1.7" data-decimals="1" data-suffix="%" data-static>1.7%</dd></div>
+            <div class="stat"><dt>Exposed every year</dt><dd class="od" data-od="1.4" data-decimals="1" data-prefix="£" data-suffix="bn" data-static>£1.4bn</dd></div>
+          </dl>
+
+          <div class="calc" id="calc">
+            <div class="calc__copy">
+              <h3>What is your exposure?</h3>
+              <p>Set your weekly subcontract labour spend. We apply the 1.7% sector estimate.</p>
+              <p class="note">Estimates only. Sources include ONS, CIPP, HMRC and UK construction crime reporting.</p>
+            </div>
+            <div class="calc__ui hud">
+              <div class="calc__spend"><label class="calc__k" for="c-range">Weekly labour spend</label><span class="calc__val od" id="c-weekly" data-od="250000" data-prefix="£" data-static>£250,000</span></div>
+              <input class="range" id="c-range" type="range" min="0" max="1000" step="1" value="518" aria-valuetext="£250,000 a week">
+              <div class="calc__presets" role="group" aria-label="Quick values">
+                <span class="calc__pill" aria-hidden="true"></span>
+                <button type="button" data-v="50000">£50k</button>
+                <button type="button" data-v="250000" aria-pressed="true">£250k</button>
+                <button type="button" data-v="1000000">£1m</button>
+                <button type="button" data-v="2500000">£2.5m</button>
+              </div>
+              <div class="calc__out">
+                <div><span class="calc__k">Every month</span><strong class="od" id="c-month" data-od="18417" data-prefix="£" data-static>£18,417</strong></div>
+                <div><span class="calc__k">Every year</span><strong class="od" id="c-year" data-od="221000" data-prefix="£" data-static>£221,000</strong></div>
+              </div>
+              <p class="calc__day mono" id="c-day" aria-live="polite">That is £850 every working day.</p>
+              <div class="calc__share"><button class="copybtn" type="button" id="c-share"><span class="copybtn-i" aria-hidden="true"><svg class="is-a"><use href="#i-copy"/></svg><svg class="is-b"><use href="#i-tick"/></svg></span><span class="copybtn-l">Share this estimate</span></button><span class="sr" role="status" id="c-share-said"></span></div>
+            </div>
+          </div>
+
+          <div class="numbers__cta"><a class="btn btn--primary btn--lg" href="book.html" data-magnetic>See your real number in a pilot<svg class="btn__arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== 05 HOW ============================== -->
     <section class="section how gx" id="how" data-live>
       <div class="wrap how__grid">
         <div class="how__left">
           <div class="head">
-            <p class="label"><span class="label__idx">04</span>How it works</p>
+            <p class="label"><span class="label__idx">05</span>How it works</p>
             <h2 data-split>From gate scan to approved payment.</h2>
           </div>
           <ol class="steps" id="steps">
@@ -327,9 +372,36 @@
             <div class="stage__bar"><span class="mono" aria-hidden="true">PayRoll Protect</span><span class="stage__dots" aria-hidden="true"><i class="is-on" style="--x:0px;--s:1"></i><i style="--x:33px"></i><i style="--x:54px"></i><i style="--x:75px"></i><i style="--x:96px"></i></span><button class="stage__pause" type="button">Pause</button></div>
             <div class="stage__view" aria-hidden="true">
               <div class="sv sv--scan is-on" data-s="0">
-                <div class="sv__photo">
-                  <img src="assets/img/terminal-verified-1000.webp" srcset="assets/img/terminal-verified-600.webp 600w, assets/img/terminal-verified-1000.webp 1000w" sizes="(min-width: 1024px) 34vw, 90vw" width="1000" height="1250" loading="lazy" alt="">
-                  <span class="sv__brackets"><i></i><i></i><i></i><i></i></span>
+                <div class="term" aria-hidden="true">
+                  <i class="term__post"></i>
+                  <div class="term__rig"><div class="term__tilt">
+                    <i class="term__shade"></i>
+                    <i class="term__ex" style="--z:1"></i><i class="term__ex" style="--z:2"></i><i class="term__ex" style="--z:3"></i><i class="term__ex" style="--z:4"></i><i class="term__ex" style="--z:5"></i><i class="term__ex" style="--z:6"></i>
+                    <div class="term__face">
+                      <span class="term__cams"><i></i><i></i><i></i></span>
+                      <i class="term__led"></i>
+                      <div class="term__screen">
+                        <i class="term__wake"></i>
+                        <svg class="term__ui" viewBox="0 0 100 140">
+                          <g class="term__bk"><path d="M22 36v-8h8M70 28h8v8M78 84v8h-8M30 92h-8v-8"/></g>
+                          <path class="term__mesh" d="M30 50 29 62 32 74 39 84 50 89 61 84 68 74 71 62 70 50M39 55h6M55 55h6M50 63v6M43 76 50 78 57 76"/>
+                          <g class="term__pts">
+                            <circle cx="36" cy="40" r="1.1" style="--i:0"/><circle cx="50" cy="36" r="1.1" style="--i:1"/><circle cx="64" cy="40" r="1.1" style="--i:2"/>
+                            <circle cx="39" cy="55" r="1.1" style="--i:3"/><circle cx="45" cy="55" r="1.1" style="--i:4"/><circle cx="55" cy="55" r="1.1" style="--i:5"/><circle cx="61" cy="55" r="1.1" style="--i:6"/>
+                            <circle cx="50" cy="63" r="1.1" style="--i:7"/><circle cx="50" cy="69" r="1.1" style="--i:8"/>
+                            <circle cx="43" cy="76" r="1.1" style="--i:9"/><circle cx="50" cy="78" r="1.1" style="--i:10"/><circle cx="57" cy="76" r="1.1" style="--i:11"/>
+                            <circle cx="30" cy="50" r="1.1" style="--i:12"/><circle cx="29" cy="62" r="1.1" style="--i:13"/><circle cx="32" cy="74" r="1.1" style="--i:14"/><circle cx="39" cy="84" r="1.1" style="--i:15"/>
+                            <circle cx="50" cy="89" r="1.1" style="--i:16"/><circle cx="61" cy="84" r="1.1" style="--i:17"/><circle cx="68" cy="74" r="1.1" style="--i:18"/><circle cx="71" cy="62" r="1.1" style="--i:19"/><circle cx="70" cy="50" r="1.1" style="--i:20"/>
+                          </g>
+                        </svg>
+                        <i class="term__scan"></i>
+                        <span class="term__hint">Hold still</span>
+                        <div class="term__ok"><svg class="term__tick" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Verified</span></div>
+                      </div>
+                      <i class="term__fp"></i>
+                      <i class="term__glare"></i>
+                    </div>
+                  </div></div>
                 </div>
                 <dl class="sv__read mono"><div><dt>Identity</dt><dd>Face match</dd></div><div><dt>Location</dt><dd>GPS · Gate 2</dd></div><div><dt>Time</dt><dd>07:41:08</dd></div></dl>
               </div>
@@ -379,88 +451,6 @@
       </div>
     </section>
 
-    <!-- ============================== 05 NUMBERS ============================== -->
-    <section class="section numbers gx" id="numbers" data-live>
-      <div class="wrap">
-        <div class="panel dark dots">
-          <div class="head">
-            <p class="label"><span class="label__idx">05</span>The numbers</p>
-            <h2 data-split>The cost of trusting the invoice.</h2>
-          </div>
-          <dl class="stats">
-            <div class="stat"><dt>UK construction payroll</dt><dd class="od" data-od="82" data-prefix="£" data-suffix="bn" data-static>£82bn</dd></div>
-            <div class="stat"><dt>Estimated payroll fraud rate</dt><dd class="od" data-od="1.7" data-decimals="1" data-suffix="%" data-static>1.7%</dd></div>
-            <div class="stat"><dt>Exposed every year</dt><dd class="od" data-od="1.4" data-decimals="1" data-prefix="£" data-suffix="bn" data-static>£1.4bn</dd></div>
-          </dl>
-
-          <div class="calc" id="calc">
-            <div class="calc__copy">
-              <h3>What is your exposure?</h3>
-              <p>Set your weekly subcontract labour spend. We apply the 1.7% sector estimate.</p>
-              <p class="note">Estimates only. Sources include ONS, CIPP, HMRC and UK construction crime reporting.</p>
-            </div>
-            <div class="calc__ui hud">
-              <div class="calc__spend"><label class="calc__k" for="c-range">Weekly labour spend</label><span class="calc__val od" id="c-weekly" data-od="250000" data-prefix="£" data-static>£250,000</span></div>
-              <input class="range" id="c-range" type="range" min="0" max="1000" step="1" value="518" aria-valuetext="£250,000 a week">
-              <div class="calc__presets" role="group" aria-label="Quick values">
-                <span class="calc__pill" aria-hidden="true"></span>
-                <button type="button" data-v="50000">£50k</button>
-                <button type="button" data-v="250000" aria-pressed="true">£250k</button>
-                <button type="button" data-v="1000000">£1m</button>
-                <button type="button" data-v="2500000">£2.5m</button>
-              </div>
-              <div class="calc__out">
-                <div><span class="calc__k">Every month</span><strong class="od" id="c-month" data-od="18417" data-prefix="£" data-static>£18,417</strong></div>
-                <div><span class="calc__k">Every year</span><strong class="od" id="c-year" data-od="221000" data-prefix="£" data-static>£221,000</strong></div>
-              </div>
-              <p class="calc__day mono" id="c-day" aria-live="polite">That is £850 every working day.</p>
-            </div>
-          </div>
-
-          <div class="numbers__cta"><a class="btn btn--primary btn--lg" href="book.html" data-magnetic>See your real number in a pilot<svg class="btn__arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================== 06 GOVERNANCE ============================== -->
-    <section class="section gov gx" id="governance" data-live>
-      <div class="wrap">
-        <div class="head">
-          <p class="label"><span class="label__idx">06</span>Governance</p>
-          <h2 data-split>Biometric data, handled properly.</h2>
-          <p class="lead rv">Attendance evidence is only worth something if it is collected lawfully and kept safe.</p>
-        </div>
-        <figure class="chart gchart card" id="gchart" aria-labelledby="gchart-cap">
-          <div class="gchart__panel">
-            <div class="gchart__top">
-              <figcaption class="chart__cap" id="gchart-cap">Biometric data across one contract</figcaption>
-              <span class="gchart__state mono" aria-hidden="true"><span>Onboarding</span><span>Held · encrypted</span><span>Deleted</span></span>
-            </div>
-            <div class="gchart__rows">
-              <div class="gchart__row">
-                <span class="gchart__k">Consent</span>
-                <div class="gchart__track" aria-hidden="true"><i class="gchart__base"></i><i class="gchart__pt"></i><i class="gchart__ping"></i><i class="gchart__ph"></i></div>
-                <span class="gchart__lab">Given at onboarding. A Data Processing Agreement is provided.</span>
-              </div>
-              <div class="gchart__row">
-                <span class="gchart__k">Biometric template</span>
-                <div class="gchart__track" aria-hidden="true"><i class="gchart__base"></i><i class="gchart__bar"></i><span class="gchart__del"><svg class="tick"><use href="#i-tick"/></svg></span><i class="gchart__ph"></i></div>
-                <span class="gchart__lab">Encrypted and stored on UK-based servers</span>
-                <span class="gchart__end">Deleted at contract end</span>
-              </div>
-              <div class="gchart__row">
-                <span class="gchart__k">Third parties</span>
-                <div class="gchart__track" aria-hidden="true"><i class="gchart__base gchart__base--void"></i><i class="gchart__ph"></i></div>
-                <span class="gchart__lab">Never shared</span>
-              </div>
-            </div>
-            <div class="gchart__axis" aria-hidden="true"><span>Contract starts</span><span>Contract ends</span></div>
-          </div>
-          <p class="chart__note">Or deleted earlier on request, at any point.</p>
-        </figure>
-      </div>
-    </section>
-
     <!-- ============================== FILM: TO ORBIT ============================== -->
     <section class="film" id="orbit" aria-label="From the gate to orbit" data-live
              data-frames="96" data-ext="webp" data-dir="assets/film-orbit" data-dir-mobile="assets/film-orbit-m"
@@ -489,21 +479,21 @@
       </div>
     </section>
 
-    <!-- ============================== 07 INSTALLATION ============================== -->
+    <!-- ============================== 06 INSTALLATION ============================== -->
     <section class="section sat-sec gx" id="install" data-live>
       <div class="sat__stage" aria-hidden="true"></div>
       <div class="sat__pin">
       <div class="wrap sat__scene">
         <div class="sat__copy">
           <div class="head">
-            <p class="label"><span class="label__idx">07</span>Installation</p>
+            <p class="label"><span class="label__idx">06</span>Installation</p>
             <h2 data-split>Any gate. Online by satellite.</h2>
             <p class="lead rv">Every terminal connects over Starlink satellite internet, so the gate doesn’t depend on site Wi-Fi or a mobile signal.</p>
             <p class="sat__brand rv"><span>Connected by</span><img src="assets/brand/starlink-white.png" width="612" height="101" alt="Starlink"></p>
           </div>
           <ol class="sat__steps">
             <li><span class="mono">01</span><div><strong>Mounted at the gate</strong><p>Arrives pre-configured, ready to fix at site entry.</p></div><i aria-hidden="true"></i></li>
-            <li><span class="mono">02</span><div><strong>Online by Starlink</strong><p>A Starlink dish brings the gate online.</p></div><i aria-hidden="true"></i></li>
+            <li><span class="mono">02</span><div><strong>Online by Starlink</strong><p>The dish gives the gate its own connection, independent of the site office.</p></div><i aria-hidden="true"></i></li>
             <li><span class="mono">03</span><div><strong>Every scan, sent</strong><p>Each check-in goes straight to UK-based servers, ready to match against the invoice.</p></div><i aria-hidden="true"></i></li>
             <li><span class="mono">04</span><div><strong>Offline, still recording</strong><p>If the link drops, scans queue at the gate and sync when it returns.</p></div><i aria-hidden="true"></i></li>
           </ol>
@@ -531,14 +521,14 @@
       </div>
     </section>
 
-    <!-- ============================== 08 PILOT ============================== -->
+    <!-- ============================== 07 PILOT ============================== -->
     <section class="section tone pilot gx" id="pilot" data-live>
       <div class="wrap">
         <div class="pilot__top">
           <div class="pilot__intro">
             <div class="head">
-              <p class="label"><span class="label__idx">08</span>The pilot</p>
-              <h2 data-split>Start with ninety days. No commitment.</h2>
+              <p class="label"><span class="label__idx">07</span>The pilot</p>
+              <h2 data-split>Start with 90 days. No commitment.</h2>
               <p class="lead rv">Pre-configured hardware, full onboarding and expert support. You see live-site results before you decide anything.</p>
             </div>
             <div class="pilot__cta rv"><a class="btn btn--primary btn--lg" href="book.html" data-magnetic>Book a 90-day pilot<svg class="btn__arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
@@ -585,6 +575,47 @@
             <li class="tl__m"><span class="tl__dot" aria-hidden="true"></span><span class="tl__day mono">Days 14–90</span><strong>Evidence builds</strong><p>Live-site results, with every saving documented and costed.</p></li>
             <li class="tl__m tl__m--end"><span class="tl__dot" aria-hidden="true"></span><span class="tl__day mono">Day 90</span><strong>Decide on the evidence</strong><p>Keep it if the numbers make the case. No commitment.</p></li>
           </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== 08 GOVERNANCE ============================== -->
+    <section class="section gov gx" id="governance" data-live>
+      <div class="wrap">
+        <div class="panel dark dots gov__panel">
+          <div class="head gov__head">
+            <p class="label"><span class="label__idx">08</span>Governance</p>
+            <h2 data-split>Biometric data, handled properly.</h2>
+            <p class="lead rv">Attendance evidence is only worth something if it is collected lawfully and kept safe.</p>
+          </div>
+          <figure class="chart gchart" id="gchart" aria-labelledby="gchart-cap">
+            <div class="gchart__panel">
+              <div class="gchart__top">
+                <figcaption class="chart__cap" id="gchart-cap">Biometric data across one contract</figcaption>
+                <span class="gchart__state mono" aria-hidden="true"><span>Onboarding</span><span>Held · encrypted</span><span>Deleted</span></span>
+              </div>
+              <div class="gchart__rows">
+                <div class="gchart__row">
+                  <span class="gchart__k">Consent</span>
+                  <div class="gchart__track" aria-hidden="true"><i class="gchart__base"></i><i class="gchart__pt"></i><i class="gchart__ping"></i><i class="gchart__ph"></i></div>
+                  <span class="gchart__lab">Given at onboarding. A Data Processing Agreement is provided.</span>
+                </div>
+                <div class="gchart__row">
+                  <span class="gchart__k">Biometric template</span>
+                  <div class="gchart__track" aria-hidden="true"><i class="gchart__base"></i><i class="gchart__bar"></i><span class="gchart__del"><svg class="tick"><use href="#i-tick"/></svg></span><i class="gchart__ph"></i></div>
+                  <span class="gchart__lab">Encrypted and stored on UK-based servers</span>
+                  <span class="gchart__end">Deleted at contract end</span>
+                </div>
+                <div class="gchart__row">
+                  <span class="gchart__k">Third parties</span>
+                  <div class="gchart__track" aria-hidden="true"><i class="gchart__base gchart__base--void"></i><i class="gchart__stop"></i><i class="gchart__ph"></i></div>
+                  <span class="gchart__lab">Never shared</span>
+                </div>
+              </div>
+              <div class="gchart__axis" aria-hidden="true"><i class="gchart__ticks"></i><span>Contract starts</span><span>Contract ends</span></div>
+            </div>
+            <p class="chart__note">Or deleted earlier on request, at any point.</p>
+          </figure>
         </div>
       </div>
     </section>
@@ -664,7 +695,7 @@
           <div>
             <p class="foot__k">Contact</p>
             <address class="foot__list">
-              <a href="mailto:hello@payrollprotect.co.uk"><span class="t">hello@payrollprotect.co.uk</span><svg class="a" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+              <span class="foot__row"><a href="mailto:hello@payrollprotect.co.uk"><span class="t">hello@payrollprotect.co.uk</span><svg class="a" aria-hidden="true"><use href="#i-arrow"/></svg></a><button class="copybtn copybtn--icon" type="button" data-copy="hello@payrollprotect.co.uk" aria-label="Copy email address"><span class="copybtn-i" aria-hidden="true"><svg class="is-a"><use href="#i-copy"/></svg><svg class="is-b"><use href="#i-tick"/></svg></span></button><span class="sr" role="status"></span></span>
               <a href="tel:+447940007881"><span class="t">+44 7940 007881</span><svg class="a" aria-hidden="true"><use href="#i-arrow"/></svg></a>
               <span class="foot__place">Romford, London</span>
             </address>
@@ -683,10 +714,12 @@
       </div>
     </div>
     <div class="foot__mark" aria-hidden="true">
+      <span class="foot__seal">
+        <span class="foot__icon foot__icon--ghost"></span>
+        <span class="foot__clip"><img class="foot__icon foot__icon--fill" src="assets/brand/mark.png" width="734" height="900" loading="lazy" alt=""></span>
+        <i class="foot__scan"></i>
+      </span>
       <span class="foot__tag"><svg class="tick"><use href="#i-tick"/></svg>Verified</span>
-      <span class="foot__word foot__word--ghost">PayRoll Protect</span>
-      <span class="foot__clip"><span class="foot__word foot__word--fill">PayRoll Protect</span></span>
-      <i class="foot__scan"></i>
     </div>
   </footer>
 

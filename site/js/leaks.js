@@ -177,7 +177,7 @@ export function initLeaks() {
     }
     const st = ScrollTrigger.create({
       trigger: sec, start: 'top top', end: () => '+=' + Math.round(window.innerHeight * 2.4),
-      pin: true, anticipatePin: 1,
+      pin: true,
       onUpdate: (self) => paint(self.progress),
       onRefresh: (self) => { build(); active = -1; paint(self.progress); },
     });

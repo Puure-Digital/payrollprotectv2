@@ -16,12 +16,42 @@ export function initHow() {
       d.classList.toggle('is-on', k === i);
     });
   }
+  // The terminal check (step 01) plays from its first frame whenever its view comes on, and
+  // waits, held on that frame, until the stage is a quarter on screen.
+  const scan = qs('#stage .sv--scan');
+  const replay = () => {
+    if (RM || !scan) return;
+    scan.classList.remove('is-run');
+    void scan.offsetWidth;
+    scan.classList.add('is-run');
+  };
+  if (!RM && scan) {
+    scan.classList.add('is-run', 'is-wait');
+    const io = new IntersectionObserver((es) => {
+      if (!es[0].isIntersecting) return;
+      scan.classList.remove('is-wait');
+      io.disconnect();
+    }, { threshold: 0.25 });
+    io.observe(qs('#stage'));
+    // Fine pointers: the terminal leans toward the pointer, and back when it leaves.
+    const term = qs('.term', scan);
+    if (term && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      const stage = qs('#stage');
+      stage.addEventListener('pointermove', (e) => {
+        const r = stage.getBoundingClientRect();
+        term.style.setProperty('--tx', ((e.clientX - r.left) / r.width * 2 - 1).toFixed(3));
+        term.style.setProperty('--ty', ((e.clientY - r.top) / r.height * 2 - 1).toFixed(3));
+      });
+      stage.addEventListener('pointerleave', () => { term.style.setProperty('--tx', 0); term.style.setProperty('--ty', 0); });
+    }
+  }
   function show(i) {
     if (i === cur) return;
     cur = i;
     steps.forEach((s, k) => s.classList.toggle('is-on', k === i));
     views.forEach((v, k) => v.classList.toggle('is-on', k === i));
     place(i);
+    if (i === 0) replay();
   }
   place(0);
 

@@ -76,7 +76,7 @@ export function initGap() {
     tl.add(zoomTween(), 0.18).set({}, {}, 1.35);
     ScrollTrigger.create({
       trigger: sec, start: 'top top', end: () => '+=' + Math.round(window.innerHeight * 1.3),
-      pin: true, anticipatePin: 1, scrub: 0.6, animation: tl,
+      pin: true, scrub: 0.6, animation: tl,
     });
   });
   mm.add('(max-width: 1023px)', () => {

@@ -81,7 +81,7 @@
             <div class="bk__sum-top"><span>Your pilot</span><span class="tag">Estimate</span></div>
             <dl class="bk__rows">
               <div><dt>Company</dt><dd data-s="company">Your company</dd></div>
-              <div><dt>Sites</dt><dd data-s="sites">Not set</dd></div>
+              <div><dt>Sites</dt><dd data-s="sites">—</dd></div>
               <div><dt>Weekly labour spend</dt><dd data-s="spend">£250,000</dd></div>
             </dl>
             <div class="bk__fig"><span>Held for query by day 90</span><strong data-s="held">£46,143</strong></div>
@@ -169,7 +169,7 @@
             <p data-done="text">Your request is in a new message to hello@payrollprotect.co.uk. Send it from your email app and we’ll be in touch to plan your pilot.</p>
             <div class="bkf__alt" data-done="alt">
               <p>Didn’t open? Copy your request and email it to <a href="mailto:hello@payrollprotect.co.uk">hello@payrollprotect.co.uk</a>.</p>
-              <button class="bkf__copy" type="button"><span class="bkf__copy-i" aria-hidden="true"><svg class="is-a"><use href="#i-copy"/></svg><svg class="is-b"><use href="#i-tick"/></svg></span><span class="bkf__copy-l">Copy request</span></button>
+              <button class="copybtn" type="button"><span class="copybtn-i" aria-hidden="true"><svg class="is-a"><use href="#i-copy"/></svg><svg class="is-b"><use href="#i-tick"/></svg></span><span class="copybtn-l">Copy request</span></button>
               <span class="sr" role="status" data-done="status"></span>
             </div>
           </div>
@@ -267,7 +267,7 @@
           <div>
             <p class="foot__k">Contact</p>
             <address class="foot__list">
-              <a href="mailto:hello@payrollprotect.co.uk"><span class="t">hello@payrollprotect.co.uk</span><svg class="a" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+              <span class="foot__row"><a href="mailto:hello@payrollprotect.co.uk"><span class="t">hello@payrollprotect.co.uk</span><svg class="a" aria-hidden="true"><use href="#i-arrow"/></svg></a><button class="copybtn copybtn--icon" type="button" data-copy="hello@payrollprotect.co.uk" aria-label="Copy email address"><span class="copybtn-i" aria-hidden="true"><svg class="is-a"><use href="#i-copy"/></svg><svg class="is-b"><use href="#i-tick"/></svg></span></button><span class="sr" role="status"></span></span>
               <a href="tel:+447940007881"><span class="t">+44 7940 007881</span><svg class="a" aria-hidden="true"><use href="#i-arrow"/></svg></a>
               <span class="foot__place">Romford, London</span>
             </address>
@@ -286,10 +286,12 @@
       </div>
     </div>
     <div class="foot__mark" aria-hidden="true">
+      <span class="foot__seal">
+        <span class="foot__icon foot__icon--ghost"></span>
+        <span class="foot__clip"><img class="foot__icon foot__icon--fill" src="assets/brand/mark.png" width="734" height="900" loading="lazy" alt=""></span>
+        <i class="foot__scan"></i>
+      </span>
       <span class="foot__tag"><svg class="tick"><use href="#i-tick"/></svg>Verified</span>
-      <span class="foot__word foot__word--ghost">PayRoll Protect</span>
-      <span class="foot__clip"><span class="foot__word foot__word--fill">PayRoll Protect</span></span>
-      <i class="foot__scan"></i>
     </div>
   </footer>
 

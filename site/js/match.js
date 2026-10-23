@@ -119,7 +119,7 @@ export function initMatch() {
     mq.classList.add('is-scene');
     const st = ScrollTrigger.create({
       trigger: sec, start: 'top top', end: () => '+=' + Math.round(window.innerHeight * 2.4),
-      pin: true, anticipatePin: 1,
+      pin: true,
       onUpdate: (self) => sceneAt(self.progress),
       onRefresh: (self) => { measure(); sceneAt(self.progress); },
     });
