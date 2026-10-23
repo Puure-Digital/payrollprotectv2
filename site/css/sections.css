@@ -1467,22 +1467,16 @@
   .foot__geo { display: none; }
 }
 
-/* The mark: the shield, large and centred. It waits as a faint silhouette, then a scan of light
-   crosses it and the brand shield is lit behind the scan; Verified lands beneath. */
-/* The shield runs off the foot of the page by about a sixth of its height; Verified sits above it. */
+/* The mark: the shield, large, centred and lit from the start. As the page ends a scan of light
+   crosses it, then Verified lands above it. */
+/* The shield runs off the foot of the page by about a third of its height; Verified sits above it. */
 .foot__mark { --h: clamp(240px, 32vw, 420px); position: relative; display: grid; justify-items: center; gap: 28px; padding: clamp(48px, 7vw, 96px) var(--gutter) 0; overflow: hidden; -webkit-user-select: none; user-select: none; pointer-events: none; }
-.foot__seal { --m: 80px; position: relative; display: block; margin-bottom: calc(var(--h) * -0.15); }
-.foot__icon { display: block; height: var(--h); width: auto; aspect-ratio: 734 / 900; }
-.foot__icon--ghost { background: rgba(255, 255, 255, 0.07); -webkit-mask: url("../assets/brand/mark.png") center / contain no-repeat; mask: url("../assets/brand/mark.png") center / contain no-repeat; }
-/* The reveal window and the scan share one box, wider than the shield by --m on every side, so
-   the glow fades out inside the window instead of being cut by it. */
-.foot__clip { position: absolute; inset: calc(var(--m) * -1); padding: var(--m); overflow: hidden; }
-.foot__icon--fill { filter: drop-shadow(0 0 48px rgba(15, 215, 106, 0.22)); }
+.foot__seal { --m: 80px; position: relative; display: block; margin-bottom: calc(var(--h) * -0.3); }
+.foot__icon { display: block; height: var(--h); width: auto; aspect-ratio: 734 / 900; filter: drop-shadow(0 0 48px rgba(15, 215, 106, 0.22)); }
 .foot__scan { position: absolute; inset: calc(var(--m) * -0.5) calc(var(--m) * -1); pointer-events: none; opacity: 0; }
 .foot__scan::before { content: ""; position: absolute; left: -1px; top: 0; bottom: 0; width: 2px; border-radius: 1px; background: linear-gradient(180deg, rgba(15, 215, 106, 0), var(--lime) 18%, var(--lime) 82%, rgba(15, 215, 106, 0)); box-shadow: 0 0 18px rgba(15, 215, 106, 0.6); }
 .foot__scan::after { content: ""; position: absolute; right: 100%; top: 0; bottom: 0; width: 120px; background: linear-gradient(90deg, rgba(15, 215, 106, 0), rgba(15, 215, 106, 0.14)); -webkit-mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent); mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent); }
 .foot__tag { order: -1; display: inline-flex; align-items: center; gap: 8px; font: 500 var(--fs-micro)/1 var(--mono); letter-spacing: 0.07em; text-transform: uppercase; color: var(--lime); opacity: 0; transform: translateY(6px); }
 .foot__tag .tick { width: 18px; height: 18px; padding: 3px; background: rgba(15, 215, 106, 0.16); color: var(--lime); }
-/* Without script, or with reduced motion, the shield is simply lit. */
-.no-js .foot__clip, .rm .foot__clip { transform: none; }
+/* Without script, or with reduced motion, Verified simply shows. */
 .no-js .foot__tag, .rm .foot__tag { opacity: 1; transform: none; }

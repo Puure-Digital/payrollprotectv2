@@ -3,10 +3,10 @@
 //   only the lit points). Points near the pointer brighten and turn green, following it on a
 //   damped ease; a slow scan crosses the field every few seconds. Drawn only while the footer is
 //   on screen, and with a fine pointer only for the pointer part.
-// - The shield, large and centred: a faint silhouette lit behind a scan of light as the page
-//   reaches its end (it runs back if the reader scrolls up past it), then marked Verified.
+// - The shield, large, centred and lit, running off the foot of the page: a scan of light crosses
+//   it as the page reaches its end (back again if the reader scrolls up past it), then Verified.
 // - A live London clock, and a back-to-top control whose ring shows how far down the page you are.
-// Reduced motion: no lit points or scan; the shield is shown lit and verified.
+// Reduced motion: no lit points or scan; the shield is shown verified.
 import { RM, FINE, qs, qsa, clamp, copyText, confirmCopy } from './util.js';
 import { live } from './engine.js';
 
@@ -102,27 +102,16 @@ function field(foot) {
 function mark(foot) {
   const m = qs('.foot__mark', foot);
   if (!m) return;
-  const clip = qs('.foot__clip', m), fill = qs('.foot__icon--fill', m);
   const scan = qs('.foot__scan', m), tag = qs('.foot__tag', m);
 
-  // The window slides in from the left and the fill slides back by the same distance, so the
-  // shield stays put over its silhouette while the window reveals it.
-  let span = clip.clientWidth, at = 0;
-  window.addEventListener('resize', () => { span = clip.clientWidth; set(at); });
-  function set(p) {
-    at = p;
-    const dx = (p - 1) * span;
-    gsap.set(clip, { x: dx });
-    gsap.set(fill, { x: -dx });
-    gsap.set(scan, { xPercent: p * 100, opacity: clamp(p / 0.04, 0, 1) * clamp((1 - p) / 0.04, 0, 1) });
-  }
+  // The shield is lit from the start; a scan of light crosses it, fading in and out at the edges.
+  const set = (p) => gsap.set(scan, { xPercent: p * 100, opacity: clamp(p / 0.04, 0, 1) * clamp((1 - p) / 0.04, 0, 1) });
   if (RM) {
-    set(1);
     gsap.set(tag, { opacity: 1, y: 0 });
     return;
   }
   set(0);
-  // The page cannot scroll past its end, so the scan plays in time once the name is in view
+  // The page cannot scroll past its end, so the scan plays in time once the shield is in view
   // (and runs back if the reader scrolls up past it): the scan crosses, then Verified lands.
   const st = { p: 0 };
   const tl = gsap.timeline({ paused: true })
