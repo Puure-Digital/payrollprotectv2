@@ -17,6 +17,18 @@ DirectoryIndex index.html
   RewriteRule ^(.*)$ site/$1 [L]
 </IfModule>
 
+# Caching. Pages, styles and scripts are checked with the server on every visit (an unchanged
+# file costs a quick 304), so a deploy shows at once; styles and scripts are also versioned by
+# content in the pages (tools/stamp.mjs). Images, film frames and fonts keep for a week.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|css|js|json)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  <FilesMatch "\.(webp|png|jpe?g|svg|ico|mp4|woff2)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+</IfModule>
+
 # The site's own page for missing (and forbidden) addresses, with the right status.
 ErrorDocument 404 /site/404.html
 ErrorDocument 403 /site/404.html

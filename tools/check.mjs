@@ -109,8 +109,15 @@ try {
   p = await open('old/no-such-page');
   const bg = await p.run(`getComputedStyle(document.body).backgroundColor`);
   check('404: styled from the site root', bg === 'rgb(243, 244, 244)', bg);
+  const imgs = await p.run(`Promise.all([...document.images].map((i) => fetch(i.src, { method: 'HEAD' }).then((r) => r.ok ? 'ok' : r.status + ' ' + new URL(i.src).pathname)))`);
+  check('404: every image loads from the site root', imgs.every((r) => r === 'ok'), imgs.filter((r) => r !== 'ok'));
   check('404: no script errors', p.errors.length === 0, p.errors);
   p.close();
+
+  // Every page loads its styles and scripts by content version (tools/stamp.mjs), so a deploy
+  // never meets a stale cached copy.
+  const stamp = spawnSync(process.execPath, [join(dirname(fileURLToPath(import.meta.url)), 'stamp.mjs'), '--check'], { encoding: 'utf8' });
+  check('pages: style and script versions are current', stamp.status === 0, stamp.stdout.trim());
 
   // Home page, phone.
   p = await open('index.html', { width: 375, height: 812, mobile: true });
