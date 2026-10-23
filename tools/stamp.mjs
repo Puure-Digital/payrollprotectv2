@@ -10,7 +10,8 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const site = join(dirname(fileURLToPath(import.meta.url)), '..', 'site');
-const hash = (path) => createHash('sha1').update(readFileSync(join(site, path))).digest('hex').slice(0, 8);
+// Line endings are ignored, so a Windows checkout (CRLF) and the server's (LF) agree on a version.
+const hash = (path) => createHash('sha1').update(readFileSync(join(site, path), 'utf8').replace(/\r\n/g, '\n')).digest('hex').slice(0, 8);
 const check = process.argv.includes('--check');
 const modules = readdirSync(join(site, 'js')).filter((f) => f.endsWith('.js')).sort();
 const ASSET = /((?:href|src)=")(\/?)((?:css|js|assets\/vendor)\/[^"?#]+\.(?:css|js))(?:\?v=[0-9a-f]+)?"/g;
